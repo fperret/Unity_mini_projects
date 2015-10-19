@@ -34,12 +34,12 @@ public class Grid_manager : MonoBehaviour {
             {
                 if (this.grid[i, j] == 0)
                 {
-                    if (this.is_current_here(i, j))
+                 /*   if (this.is_current_here(i, j))
                     {
                         this.grid[i, j] = 2;
                     }
                     else
-                        this.grid[i, j] = 0;
+                        this.grid[i, j] = 0;*/
                 }
                 my_debug += this.grid[i, j].ToString();
             }
@@ -57,5 +57,13 @@ public class Grid_manager : MonoBehaviour {
                 return (true);
         }
         return (false);
+    }
+
+    public void update_new_drop()
+    {
+        for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
+        {
+            this.grid[(int)this.current.children_blocks[k].transform.position.y, (int)this.current.children_blocks[k].transform.position.x] = this.current.tetrimino_id;
+        }
     }
 }

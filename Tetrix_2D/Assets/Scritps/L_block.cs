@@ -6,6 +6,7 @@ public class L_block : ATetrimino
     new public void Start()
     {
         this.blocks = new int[3, 3];
+        this.tetrimino_id = 3;
         base.Start();
     }
 

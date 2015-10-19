@@ -7,6 +7,7 @@ public class S_block : ATetrimino
     new public void Start()
     {
         this.blocks = new int[3, 3];
+        this.tetrimino_id = 5;
         base.Start();
     }
 
