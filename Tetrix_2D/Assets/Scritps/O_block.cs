@@ -15,5 +15,7 @@ public class O_block : ATetrimino
         this.blocks[1, 0] = 1;
         this.blocks[0, 1] = 1;
         this.blocks[1, 1] = 1;
+        this.index_leftmost = 0;
+        this.index_rightmost = 1;
     }
 }

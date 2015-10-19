@@ -27,6 +27,8 @@ public class J_block : ATetrimino
                         this.blocks[i, j] = 0;
                 }
             }
+            this.index_leftmost = 0;
+            this.index_rightmost = 2;
         }
         else if (form == 1)
         {
@@ -42,6 +44,8 @@ public class J_block : ATetrimino
                         this.blocks[i, j] = 0;
                 }
             }
+            this.index_leftmost = 0;
+            this.index_rightmost = 3;
         }
         else if (form == 2)
         {
@@ -59,6 +63,8 @@ public class J_block : ATetrimino
                         this.blocks[i, j] = 0;
                 }
             }
+            this.index_leftmost = 1;
+            this.index_rightmost = 0;
         }
         else if (form == 3)
         {
@@ -74,7 +80,8 @@ public class J_block : ATetrimino
                         this.blocks[i, j] = 0;
                 }
             }
-
+            this.index_leftmost = 0;
+            this.index_rightmost = 1;
         }
     }
 

@@ -5,7 +5,7 @@ public class I_block : ATetrimino
 {
     new public void Start()
     {
-        this.blocks = new int[5, 5];
+        this.blocks = new int[4, 4];
         base.Start();
     }
 
@@ -13,9 +13,24 @@ public class I_block : ATetrimino
     {
         if (form == 0 || form == 2)
         {
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 4; ++i)
             {
-                for (int j = 0; j < 5; ++j)
+                for (int j = 0; j < 4; ++j)
+                {
+                    if (i == 1)
+                        this.blocks[i, j] = 1;
+                    else
+                        this.blocks[i, j] = 0;
+                }
+            }
+            this.index_leftmost = 0;
+            this.index_rightmost = 3;
+        }
+        else if (form == 1)
+        {
+            for (int i = 0; i < 4; ++i)
+            {
+                for (int j = 0; j < 4; ++j)
                 {
                     if (j == 2)
                         this.blocks[i, j] = 1;
@@ -23,19 +38,23 @@ public class I_block : ATetrimino
                         this.blocks[i, j] = 0;
                 }
             }
+            this.index_leftmost = 0;
+            this.index_rightmost = 0;
         }
-        else
+        else if (form == 3)
         {
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 4; ++i)
             {
-                for (int j = 0; j < 5; ++j)
+                for (int j = 0; j < 4; ++j)
                 {
-                    if (i == 2)
+                    if (j == 1)
                         this.blocks[i, j] = 1;
                     else
                         this.blocks[i, j] = 0;
                 }
             }
+            this.index_leftmost = 0;
+            this.index_rightmost = 0;
         }
     }
 
