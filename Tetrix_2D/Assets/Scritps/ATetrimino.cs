@@ -13,6 +13,7 @@ abstract public class ATetrimino : MonoBehaviour
     public int current_form;
     // Passer par un script différent pour les input et le set disable ?
     private bool is_controlled;
+    private float time_call;
 
     public abstract void set_form(int form);
 
@@ -38,8 +39,15 @@ abstract public class ATetrimino : MonoBehaviour
         if (this.current_form == 4)
             this.current_form = 0;
         this.set_form(this.current_form);
+        // Should move piece accordingly
+        if (!Grid_manager.instance.is_position_possible())
+        {
+            this.current_form -= 1;
+            if (this.current_form == -1)
+                this.current_form = 3;
+            this.set_form(this.current_form);
+        }
         this.build_form();
-        // Generaliser pour gerer les libertés en fonction de la grille
         if (this.children_blocks[this.index_leftmost].transform.position.x <= 0)
         {
             this.transform.position += new Vector3(-this.children_blocks[this.index_leftmost].transform.position.x, 0, 0);
@@ -56,7 +64,7 @@ abstract public class ATetrimino : MonoBehaviour
 
     public void fall()
     {
-        if (this.children_blocks[0].transform.position.y > 0)
+        if (Grid_manager.instance.can_move_down())
             this.transform.position += Vector3.down;
         // Desactiver le script ?
         else if (this.is_controlled)
@@ -75,26 +83,36 @@ abstract public class ATetrimino : MonoBehaviour
         this.current_form = 0;
         this.set_form(0);
         this.is_controlled = true;
+        this.time_call = 0;
         Grid_manager.instance.current = this;
     }
 
     public void Update()
     {
+        this.time_call += Time.deltaTime;
         if (this.is_controlled)
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (this.time_call >= 0.08f)
             {
-                if (this.children_blocks[this.index_rightmost].transform.position.x < 12)
-                    this.transform.position += Vector3.right;
-            }
-            else if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                if (this.children_blocks[this.index_leftmost].transform.position.x > 0)
-                    this.transform.position += Vector3.left;
-            }
-            else if (Input.GetKeyDown(KeyCode.Space))
-            {
-                this.rotate();
+                if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    if (this.children_blocks[this.index_rightmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
+                        this.transform.position += Vector3.right;
+                }
+                else if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    if (this.children_blocks[this.index_leftmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
+                        this.transform.position += Vector3.left;
+                }
+                else if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    this.fall();
+                }
+                else if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    this.rotate();
+                }
+                this.time_call = 0;
             }
         }
     }
