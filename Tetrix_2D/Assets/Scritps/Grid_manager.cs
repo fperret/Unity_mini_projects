@@ -137,5 +137,6 @@ public class Grid_manager : MonoBehaviour {
                 }
             }
         }
+        Game_manager.instance.give_new_tetrimino();
     }
 }
