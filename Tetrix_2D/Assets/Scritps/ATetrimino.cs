@@ -39,7 +39,7 @@ abstract public class ATetrimino : MonoBehaviour
         if (this.current_form == 4)
             this.current_form = 0;
         this.set_form(this.current_form);
-        // Should move piece accordingly
+        // Should move piece accordingly /!\ IMPORTANT
         if (!Grid_manager.instance.is_position_possible())
         {
             this.current_form -= 1;
@@ -71,7 +71,7 @@ abstract public class ATetrimino : MonoBehaviour
         {
             this.is_controlled = false;
             Grid_manager.instance.update_new_drop();
-            Game_manager.instance.give_new_tetrimino();
+        //    Game_manager.instance.give_new_tetrimino();
             CancelInvoke("fall");
         }
 
@@ -108,11 +108,11 @@ abstract public class ATetrimino : MonoBehaviour
                 {
                     this.fall();
                 }
-                else if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    this.rotate();
-                }
                 this.time_call = 0;
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                this.rotate();
             }
         }
     }
