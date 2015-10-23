@@ -6,6 +6,7 @@ abstract public class ATetrimino : MonoBehaviour
     public int[,] blocks;
     // 0 = lowest children
     public GameObject[] children_blocks;
+    public GameObject preview;
     protected int index_leftmost;
     protected int index_rightmost;
 
@@ -66,12 +67,10 @@ abstract public class ATetrimino : MonoBehaviour
     {
         if (Grid_manager.instance.can_move_down())
             this.transform.position += Vector3.down;
-        // Desactiver le script ?
         else if (this.is_controlled)
         {
             this.is_controlled = false;
             Grid_manager.instance.update_new_drop();
-        //    Game_manager.instance.give_new_tetrimino();
             CancelInvoke("fall");
         }
 
@@ -87,11 +86,16 @@ abstract public class ATetrimino : MonoBehaviour
         Grid_manager.instance.current = this;
     }
 
+    private void place_preview()
+    {
+
+    }
+
     public void Update()
     {
-        this.time_call += Time.deltaTime;
         if (this.is_controlled)
         {
+            this.time_call += Time.deltaTime;
             if (this.time_call >= 0.08f)
             {
                 if (Input.GetKey(KeyCode.RightArrow))
@@ -114,6 +118,7 @@ abstract public class ATetrimino : MonoBehaviour
             {
                 this.rotate();
             }
+            this.place_preview();
         }
     }
 }

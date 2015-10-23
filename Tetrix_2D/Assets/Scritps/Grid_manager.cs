@@ -23,6 +23,7 @@ public class Grid_manager : MonoBehaviour {
                 this.grid[i, j] = null;
             }
         }
+        Game_manager.instance.give_new_tetrimino();
 	}
 	
 	// Update is called once per frame
@@ -39,6 +40,11 @@ public class Grid_manager : MonoBehaviour {
             if (i <= 0 || i <= 22 && this.grid[i - 1, j] != null)
                 return (false);
         }
+        return (true);
+    }
+
+    public bool can_move_down(GameObject game_object)
+    {
         return (true);
     }
 
@@ -135,8 +141,11 @@ public class Grid_manager : MonoBehaviour {
                         this.grid[i - 1, j] = this.grid[i, j];
                     }
                 }
+                Game_manager.instance.update_lines(1);
+                Game_manager.instance.update_score(100);
             }
         }
+        Game_manager.instance.update_score(20);
         Game_manager.instance.give_new_tetrimino();
     }
 }
