@@ -45,6 +45,13 @@ public class Grid_manager : MonoBehaviour {
 
     public bool can_move_down(GameObject game_object)
     {
+        Transform[] blocks = game_object.GetComponentsInChildren<Transform>();
+        for (int k = 1; k < blocks.GetLength(0); ++k)
+        {
+            int i = (int)blocks[k].position.y;
+            if (i <= 0 || i <= 22 && this.grid[i - 1, (int)blocks[k].position.x] != null)
+                return (false);
+        }
         return (true);
     }
 

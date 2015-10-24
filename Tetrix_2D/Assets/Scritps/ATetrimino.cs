@@ -21,6 +21,7 @@ abstract public class ATetrimino : MonoBehaviour
     private void build_form()
     {
         int k = 0;
+        Transform[] preview_blocks = this.preview.GetComponentsInChildren<Transform>();
         for (int i = 0; i < blocks.GetLength(0); ++i)
         {
             for (int j = 0; j < blocks.GetLength(1); ++j)
@@ -28,6 +29,7 @@ abstract public class ATetrimino : MonoBehaviour
                 if (blocks[i, j] == 1)
                 {
                     this.children_blocks[k].transform.position = new Vector3(this.transform.position.x + j, this.transform.position.y + i, 0);
+                    preview_blocks[k + 1].localPosition = this.children_blocks[k].transform.localPosition;
                     k++;
                 }
             }
@@ -70,6 +72,7 @@ abstract public class ATetrimino : MonoBehaviour
         else if (this.is_controlled)
         {
             this.is_controlled = false;
+            Destroy(this.preview);
             Grid_manager.instance.update_new_drop();
             CancelInvoke("fall");
         }
@@ -84,11 +87,16 @@ abstract public class ATetrimino : MonoBehaviour
         this.is_controlled = true;
         this.time_call = 0;
         Grid_manager.instance.current = this;
+        this.preview = (GameObject) Instantiate(this.preview, this.transform.position, Quaternion.identity);
     }
 
     private void place_preview()
     {
-
+        this.preview.transform.position = this.transform.position;
+        while (Grid_manager.instance.can_move_down(this.preview))
+        {
+            this.preview.transform.position += Vector3.down;
+        }
     }
 
     public void Update()
