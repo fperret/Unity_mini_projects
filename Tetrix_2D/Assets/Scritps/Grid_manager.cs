@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Grid_manager : MonoBehaviour {
 
-    public GameObject  [,]grid = new GameObject[22, 13];
+    public GameObject  [,]grid = new GameObject[25, 13];
     public static Grid_manager instance;
     public ATetrimino current;
 
@@ -16,7 +16,7 @@ public class Grid_manager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        for (int i = 0; i < 22; ++i)
+        for (int i = 0; i < 25; ++i)
         {
             for (int j = 0; j < 13; ++j)
             {
@@ -37,7 +37,7 @@ public class Grid_manager : MonoBehaviour {
         {
             int i = (int)this.current.children_blocks[k].transform.position.y;
             int j = (int)this.current.children_blocks[k].transform.position.x;
-            if (i <= 0 || i <= 22 && this.grid[i - 1, j] != null)
+            if (i <= 0 || i <= 24 && this.grid[i - 1, j] != null)
                 return (false);
         }
         return (true);
@@ -49,7 +49,7 @@ public class Grid_manager : MonoBehaviour {
         for (int k = 1; k < blocks.GetLength(0); ++k)
         {
             int i = (int)blocks[k].position.y;
-            if (i <= 0 || i <= 22 && this.grid[i - 1, (int)blocks[k].position.x] != null)
+            if (i <= 0 || i <= 24 && this.grid[i - 1, (int)blocks[k].position.x] != null)
                 return (false);
         }
         return (true);
@@ -60,7 +60,7 @@ public class Grid_manager : MonoBehaviour {
         for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
         {
             int i = (int)this.current.children_blocks[k].transform.position.y;
-            if (i <= 21 && this.grid[(int)this.current.children_blocks[k].transform.position.y, (int)this.current.children_blocks[k].transform.position.x + 1] != null)
+            if (i <= 24 && this.grid[(int)this.current.children_blocks[k].transform.position.y, (int)this.current.children_blocks[k].transform.position.x + 1] != null)
                 return (false);
         }
         return (true);
@@ -71,7 +71,7 @@ public class Grid_manager : MonoBehaviour {
         for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
         {
             int i = (int)this.current.children_blocks[k].transform.position.y;
-            if (i <= 21 && this.grid[i, (int)this.current.children_blocks[k].transform.position.x - 1] != null)
+            if (i <= 23 && this.grid[i, (int)this.current.children_blocks[k].transform.position.x - 1] != null)
                 return (false);
         }
         return (true);
@@ -87,7 +87,7 @@ public class Grid_manager : MonoBehaviour {
                 {
                     int child_y = (int)this.current.transform.position.y + i;
                     int child_x = (int)this.current.transform.position.x + j;
-                    if (child_y >= 0 && child_y <= 21 && child_x >= 0 && child_x <= 12)
+                    if (child_y >= 0 && child_y <= 24 && child_x >= 0 && child_x <= 12)
                     {
                         if (this.grid[child_y, child_x] != null)
                             return (false);
@@ -119,15 +119,20 @@ public class Grid_manager : MonoBehaviour {
         return (true);
     }
 
-    public void update_new_drop()
+    public void update_new_drop(bool instant_drop)
     {
         for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
         {
             int check_i = (int)this.current.children_blocks[k].transform.position.y;
+            if (check_i > 23)
+            {
+                Game_manager.instance.game_over();
+                return;
+            }
             this.grid[check_i, (int)this.current.children_blocks[k].transform.position.x] = this.current.children_blocks[k];
         }
 
-
+        // Check row
         for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
         {
             int row = (int)this.current.children_blocks[k].transform.position.y;
@@ -149,10 +154,13 @@ public class Grid_manager : MonoBehaviour {
                     }
                 }
                 Game_manager.instance.update_lines(1);
-                Game_manager.instance.update_score(100);
+                Game_manager.instance.update_score(50);
             }
         }
-        Game_manager.instance.update_score(20);
+        if (instant_drop)
+            Game_manager.instance.update_score(10);
+        else
+            Game_manager.instance.update_score(5);
         Game_manager.instance.give_new_tetrimino();
     }
 }

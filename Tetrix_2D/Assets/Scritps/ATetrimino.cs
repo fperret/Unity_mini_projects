@@ -73,7 +73,7 @@ abstract public class ATetrimino : MonoBehaviour
         {
             this.is_controlled = false;
             Destroy(this.preview);
-            Grid_manager.instance.update_new_drop();
+            Grid_manager.instance.update_new_drop(false);
             CancelInvoke("fall");
         }
 
@@ -81,7 +81,10 @@ abstract public class ATetrimino : MonoBehaviour
 
     public void Start()
     {
-        InvokeRepeating("fall", 1f, 1f);
+        float speed = 1f - ((float)Game_manager.instance.level / 10);
+        if (speed < 0.1f)
+            speed = 0.1f;
+        InvokeRepeating("fall", speed, speed);
         this.current_form = 0;
         this.set_form(0);
         this.is_controlled = true;
@@ -99,9 +102,21 @@ abstract public class ATetrimino : MonoBehaviour
         }
     }
 
+    private void instant_drop()
+    {
+        while (Grid_manager.instance.can_move_down())
+        {
+            this.transform.position += Vector3.down;
+        }
+        this.is_controlled = false;
+        Destroy(this.preview);
+        Grid_manager.instance.update_new_drop(true);
+        CancelInvoke("fall");
+    }
+
     public void Update()
     {
-        if (this.is_controlled)
+        if (this.is_controlled && !Game_manager.instance.pause)
         {
             this.time_call += Time.deltaTime;
             if (this.time_call >= 0.08f)
@@ -126,7 +141,18 @@ abstract public class ATetrimino : MonoBehaviour
             {
                 this.rotate();
             }
+            if  (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                this.instant_drop();
+            }
             this.place_preview();
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Game_manager.instance.give_from_storage();
+                Game_manager.instance.storage = this.tetrimino_id;
+                Destroy(this.preview);
+                Destroy(this.gameObject);
+            }
         }
     }
 }
