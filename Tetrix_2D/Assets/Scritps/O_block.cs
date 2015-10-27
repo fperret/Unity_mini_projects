@@ -6,7 +6,7 @@ public class O_block : ATetrimino
     new public void Start()
     {
         this.blocks = new int[2, 2];
-        this.tetrimino_id = 4;
+        this.tetrimino_id = 3;
         base.Start();
     }
 

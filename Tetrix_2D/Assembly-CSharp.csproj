@@ -46,9 +46,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scritps\ATetrimino.cs" />
+     <Compile Include="Assets\Scritps\Audio_manager.cs" />
      <Compile Include="Assets\Scritps\Game_manager.cs" />
      <Compile Include="Assets\Scritps\Grid_manager.cs" />
      <Compile Include="Assets\Scritps\I_block.cs" />
+     <Compile Include="Assets\Scritps\IntShuffleBag.cs" />
      <Compile Include="Assets\Scritps\J_block.cs" />
      <Compile Include="Assets\Scritps\L_block.cs" />
      <Compile Include="Assets\Scritps\O_block.cs" />

@@ -12,6 +12,7 @@ abstract public class ATetrimino : MonoBehaviour
 
     public int tetrimino_id;
     public int current_form;
+    public bool from_storage;
     // Passer par un script différent pour les input et le set disable ?
     private bool is_controlled;
     private float time_call;
@@ -79,6 +80,11 @@ abstract public class ATetrimino : MonoBehaviour
 
     }
 
+    public void Awake()
+    {
+        this.from_storage = false;
+    }
+
     public void Start()
     {
         float speed = 1f - ((float)Game_manager.instance.level / 10);
@@ -121,17 +127,17 @@ abstract public class ATetrimino : MonoBehaviour
             this.time_call += Time.deltaTime;
             if (this.time_call >= 0.08f)
             {
-                if (Input.GetKey(KeyCode.RightArrow))
+                if (Input.GetKey(KeyCode.D))
                 {
                     if (this.children_blocks[this.index_rightmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
                         this.transform.position += Vector3.right;
                 }
-                else if (Input.GetKey(KeyCode.LeftArrow))
+                else if (Input.GetKey(KeyCode.Q))
                 {
                     if (this.children_blocks[this.index_leftmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
                         this.transform.position += Vector3.left;
                 }
-                else if (Input.GetKey(KeyCode.DownArrow))
+                else if (Input.GetKey(KeyCode.S))
                 {
                     this.fall();
                 }
@@ -141,15 +147,14 @@ abstract public class ATetrimino : MonoBehaviour
             {
                 this.rotate();
             }
-            if  (Input.GetKeyDown(KeyCode.UpArrow))
+            if  (Input.GetKeyDown(KeyCode.Z))
             {
                 this.instant_drop();
             }
             this.place_preview();
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyDown(KeyCode.Return) && !this.from_storage)
             {
-                Game_manager.instance.give_from_storage();
-                Game_manager.instance.storage = this.tetrimino_id;
+                Game_manager.instance.trade_from_storage(this.tetrimino_id);
                 Destroy(this.preview);
                 Destroy(this.gameObject);
             }
