@@ -15,11 +15,7 @@ Loading F:\Ecole\unity\Unity_mini_projects\Tetrix_2D\tetris_Data\Managed\UnityEn
 Platform assembly: F:\Ecole\unity\Unity_mini_projects\Tetrix_2D\tetris_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading F:\Ecole\unity\Unity_mini_projects\Tetrix_2D\tetris_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: F:\Ecole\unity\Unity_mini_projects\Tetrix_2D\tetris_Data\Managed\System.Core.dll (this message is harmless)
-- Completed reload, in  0.046 seconds
+- Completed reload, in  0.150 seconds
 desktop: 1680x1050 59Hz; virtual: 3600x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
-<RI> Initialized touch support.
-Platform assembly: F:\Ecole\unity\Unity_mini_projects\Tetrix_2D\tetris_Data\Managed\System.dll (this message is harmless)
-Setting up 1 worker threads for Enlighten.
-  Thread -> id: 786c -> priority: 1 
