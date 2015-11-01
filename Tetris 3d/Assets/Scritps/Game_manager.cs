@@ -14,6 +14,7 @@ public class Game_manager : MonoBehaviour
     public int level;
     public bool pause;
     public int storage;
+    public int current_face;
 
     private int[] incoming_id = new int[4];
     private int lines;
@@ -38,6 +39,7 @@ public class Game_manager : MonoBehaviour
         this.score = 0;
         this.pause = false;
         this.storage = -1;
+        this.current_face = Constants.FRONT;
 	}
 	
 	// Update is called once per frame
@@ -60,7 +62,19 @@ public class Game_manager : MonoBehaviour
         {
             Application.Quit();
         }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            this.change_face();
+        }
 	}
+
+    private void change_face()
+    {
+        if (this.current_face == Constants.UP)
+            this.current_face = Constants.FRONT;
+        else
+            this.current_face++;
+    }
 
     public void update_score(int add)
     {

@@ -3,35 +3,39 @@ using System.Collections;
 
 abstract public class ATetrimino : MonoBehaviour
 {
-    public int[,] blocks;
+    public int[,,] blocks;
     // 0 = lowest children
     public GameObject[] children_blocks;
     public GameObject preview;
     protected int index_leftmost;
     protected int index_rightmost;
+    protected int index_frontmost;
+    protected int index_backmost;
 
     public int tetrimino_id;
     public int current_form;
     public bool from_storage;
-    // Passer par un script différent pour les input et le set disable ?
     private bool is_controlled;
     private float time_call;
 
-    public abstract void set_form(int form);
+    public abstract void set_form(int form, int face);
 
     private void build_form()
     {
-        int k = 0;
+        int e = 0;
         Transform[] preview_blocks = this.preview.GetComponentsInChildren<Transform>();
         for (int i = 0; i < blocks.GetLength(0); ++i)
         {
             for (int j = 0; j < blocks.GetLength(1); ++j)
             {
-                if (blocks[i, j] == 1)
+                for (int k = 0; k < blocks.GetLength(2); ++k)
                 {
-                    this.children_blocks[k].transform.position = new Vector3(this.transform.position.x + j, this.transform.position.y + i, 0);
-                    preview_blocks[k + 1].localPosition = this.children_blocks[k].transform.localPosition;
-                    k++;
+                    if (blocks[i, j, k] == 1)
+                    {
+                        this.children_blocks[e].transform.position = new Vector3(this.transform.position.x + j, this.transform.position.y + i, this.transform.position.z + k);
+                        preview_blocks[e + 1].localPosition = this.children_blocks[e].transform.localPosition;
+                        e++;
+                    }
                 }
             }
         }
@@ -42,14 +46,14 @@ abstract public class ATetrimino : MonoBehaviour
         this.current_form += 1;
         if (this.current_form == 4)
             this.current_form = 0;
-        this.set_form(this.current_form);
+        this.set_form(this.current_form, Game_manager.instance.current_face);
         // Should move piece accordingly /!\ IMPORTANT
         if (!Grid_manager.instance.is_position_possible())
         {
             this.current_form -= 1;
             if (this.current_form == -1)
                 this.current_form = 3;
-            this.set_form(this.current_form);
+            this.set_form(this.current_form, Game_manager.instance.current_face);
         }
         this.build_form();
         if (this.children_blocks[this.index_leftmost].transform.position.x <= 0)
@@ -77,7 +81,6 @@ abstract public class ATetrimino : MonoBehaviour
             Grid_manager.instance.update_new_drop(false);
             CancelInvoke("fall");
         }
-
     }
 
     public void Awake()
@@ -92,7 +95,7 @@ abstract public class ATetrimino : MonoBehaviour
             speed = 0.1f;
         InvokeRepeating("fall", speed, speed);
         this.current_form = 0;
-        this.set_form(0);
+        this.set_form(0, Game_manager.instance.current_face);
         this.is_controlled = true;
         this.time_call = 0;
         Grid_manager.instance.current = this;
@@ -139,15 +142,27 @@ abstract public class ATetrimino : MonoBehaviour
                 }
                 else if (Input.GetKey(KeyCode.S))
                 {
+                    // Changer index pour block le plus en avant
+                    if (this.children_blocks[0].transform.position.z > 0 && Grid_manager.instance.is_front_free())
+                        this.transform.position += Vector3.back;
+                }
+                else if (Input.GetKey(KeyCode.Z))
+                {
+                    // Changer index pour block le plus en arriere
+                    if (this.children_blocks[0].transform.position.z < 12 && Grid_manager.instance.is_back_free())
+                        this.transform.position += Vector3.forward;
+                }
+                else if (Input.GetKey(KeyCode.W))
+                {
                     this.fall();
                 }
                 this.time_call = 0;
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.R))
             {
                 this.rotate();
             }
-            if  (Input.GetKeyDown(KeyCode.Z))
+            if  (Input.GetKeyDown(KeyCode.Space))
             {
                 this.instant_drop();
             }

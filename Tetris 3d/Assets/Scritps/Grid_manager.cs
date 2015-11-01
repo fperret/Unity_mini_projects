@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Grid_manager : MonoBehaviour {
 
-    public GameObject  [,]grid = new GameObject[25, 13];
+    public GameObject[,,] grid = new GameObject[25, 13, 13];
     public static Grid_manager instance;
     public ATetrimino current;
 
@@ -13,31 +13,34 @@ public class Grid_manager : MonoBehaviour {
         instance = this;
     }
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         for (int i = 0; i < 25; ++i)
         {
             for (int j = 0; j < 13; ++j)
             {
-                this.grid[i, j] = null;
+                for (int k = 0; k < 13; ++k)
+                    this.grid[i, j, k] = null;
             }
         }
         Game_manager.instance.give_new_tetrimino();
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-	}
+    }
 
     public bool can_move_down()
     {
-        for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
+        // Transformer en foreach ?
+        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
         {
-            int i = (int)this.current.children_blocks[k].transform.position.y;
-            int j = (int)this.current.children_blocks[k].transform.position.x;
-            if (i <= 0 || i <= 24 && this.grid[i - 1, j] != null)
+            int i = (int)this.current.children_blocks[e].transform.position.y;
+            int j = (int)this.current.children_blocks[e].transform.position.x;
+            int k = (int)this.current.children_blocks[e].transform.position.z;
+            if (i <= 0 || i <= 24 && this.grid[i - 1, j, k] != null)
                 return (false);
         }
         return (true);
@@ -46,10 +49,13 @@ public class Grid_manager : MonoBehaviour {
     public bool can_move_down(GameObject game_object)
     {
         Transform[] blocks = game_object.GetComponentsInChildren<Transform>();
-        for (int k = 1; k < blocks.GetLength(0); ++k)
+        // Transformer en foreach ?
+        for (int e = 1; e < blocks.GetLength(0); ++e)
         {
-            int i = (int)blocks[k].position.y;
-            if (i <= 0 || i <= 24 && this.grid[i - 1, (int)blocks[k].position.x] != null)
+            int i = (int)blocks[e].position.y;
+            if (i <= 0 || (i <= 23 && this.grid[i - 1,
+                                                (int)blocks[e].position.x,
+                                                (int)blocks[e].position.z] != null))
                 return (false);
         }
         return (true);
@@ -57,10 +63,13 @@ public class Grid_manager : MonoBehaviour {
 
     public bool is_right_free()
     {
-        for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
+        // Transformer en foreach ?
+        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
         {
-            int i = (int)this.current.children_blocks[k].transform.position.y;
-            if (i <= 24 && this.grid[(int)this.current.children_blocks[k].transform.position.y, (int)this.current.children_blocks[k].transform.position.x + 1] != null)
+            int i = (int)this.current.children_blocks[e].transform.position.y;
+            if (i <= 23 && this.grid[(int)this.current.children_blocks[e].transform.position.y,
+                                     (int)this.current.children_blocks[e].transform.position.x + 1,
+                                     (int)this.current.children_blocks[e].transform.position.z] != null)
                 return (false);
         }
         return (true);
@@ -68,10 +77,39 @@ public class Grid_manager : MonoBehaviour {
 
     public bool is_left_free()
     {
-        for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
+        // Transformer en foreach ?
+        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
         {
-            int i = (int)this.current.children_blocks[k].transform.position.y;
-            if (i <= 23 && this.grid[i, (int)this.current.children_blocks[k].transform.position.x - 1] != null)
+            int i = (int)this.current.children_blocks[e].transform.position.y;
+            if (i <= 23 && this.grid[i,
+                                    (int)this.current.children_blocks[e].transform.position.x - 1,
+                                    (int)this.current.children_blocks[e].transform.position.z] != null)
+                return (false);
+        }
+        return (true);
+    }
+
+    public bool is_front_free()
+    {
+        foreach (GameObject block in this.current.children_blocks)
+        {
+            int i = (int)block.transform.position.y;
+            if (i <= 23 && this.grid[i,
+                                    (int)block.transform.position.x,
+                                    (int)block.transform.position.z - 1] != null)
+                return (false);
+        }
+        return (true);
+    }
+
+    public bool is_back_free()
+    {
+        foreach (GameObject block in this.current.children_blocks)
+        {
+            int i = (int)block.transform.position.y;
+            if (i <= 23 && this.grid[i,
+                                    (int)block.transform.position.x,
+                                    (int)block.transform.position.z + 1] != null)
                 return (false);
         }
         return (true);
@@ -83,14 +121,18 @@ public class Grid_manager : MonoBehaviour {
         {
             for (int j = 0; j < this.current.blocks.GetLength(1); ++j)
             {
-                if (this.current.blocks[i, j] == 1)
+                for (int k = 0; k < this.current.blocks.GetLength(2); ++k)
                 {
-                    int child_y = (int)this.current.transform.position.y + i;
-                    int child_x = (int)this.current.transform.position.x + j;
-                    if (child_y >= 0 && child_y <= 24 && child_x >= 0 && child_x <= 12)
+                    if (this.current.blocks[i, j, k] == 1)
                     {
-                        if (this.grid[child_y, child_x] != null)
-                            return (false);
+                        int child_y = (int)this.current.transform.position.y + i;
+                        int child_x = (int)this.current.transform.position.x + j;
+                        int child_z = (int)this.current.transform.position.z + k;
+                        if (child_y >= 0 && child_y <= 24 && child_x >= 0 && child_x <= 12)
+                        {
+                            if (this.grid[child_y, child_x, child_z] != null)
+                                return (false);
+                        }
                     }
                 }
             }
@@ -100,20 +142,21 @@ public class Grid_manager : MonoBehaviour {
 
     bool is_current_here(int i, int j)
     {
-        for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
+        // Transformer en foreach ?
+        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
         {
-            if (this.current.children_blocks[k].transform.position.y == i
-                && this.current.children_blocks[k].transform.position.x == j)
+            if (this.current.children_blocks[e].transform.position.y == i
+                && this.current.children_blocks[e].transform.position.x == j)
                 return (true);
         }
         return (false);
     }
 
-    private bool check_row_full(int i)
+    private bool check_row_full(int i, int k)
     {
         for (int j = 0; j < this.grid.GetLength(1); ++j)
         {
-            if (this.grid[i, j] == null)
+            if (this.grid[i, j, k] == null)
                 return (false);
         }
         return (true);
@@ -121,36 +164,42 @@ public class Grid_manager : MonoBehaviour {
 
     public void update_new_drop(bool instant_drop)
     {
-        for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
+        // Transformer en foreach ?
+        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
         {
-            int check_i = (int)this.current.children_blocks[k].transform.position.y;
+            int check_i = (int)this.current.children_blocks[e].transform.position.y;
             if (check_i > 23)
             {
                 Game_manager.instance.game_over();
                 return;
             }
-            this.grid[check_i, (int)this.current.children_blocks[k].transform.position.x] = this.current.children_blocks[k];
+            this.grid[check_i, (int)this.current.children_blocks[e].transform.position.x, (int)this.current.children_blocks[e].transform.position.z] = this.current.children_blocks[e];
         }
 
         // Check row
-        for (int k = 0; k < this.current.children_blocks.GetLength(0); ++k)
+        // Transformer en foreach ?
+        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
         {
-            int row = (int)this.current.children_blocks[k].transform.position.y;
-            if (this.check_row_full(row))
+            int row = (int)this.current.children_blocks[e].transform.position.y;
+            int depth = (int)this.current.children_blocks[e].transform.position.z;
+            if (this.check_row_full(row, depth))
             {
                 for (int j = 0; j < this.grid.GetLength(1); ++j)
                 {
-                    Destroy(this.grid[row, j]);
+                    Destroy(this.grid[row, j, depth]);
                 }
                 for (int i = row + 1; i < this.grid.GetLength(0); ++i)
                 {
                     for (int j = 0; j < this.grid.GetLength(1); ++j)
                     {
-                        if (this.grid[i, j] != null)
+                        for (int k = 0; k < this.grid.GetLength(2); ++k)
                         {
-                            this.grid[i, j].transform.position += Vector3.down;
+                            if (this.grid[i, j, k] != null)
+                            {
+                                this.grid[i, j, k].transform.position += Vector3.down;
+                            }
+                            this.grid[i - 1, j, k] = this.grid[i, j, k];
                         }
-                        this.grid[i - 1, j] = this.grid[i, j];
                     }
                 }
                 Game_manager.instance.update_lines(1);
