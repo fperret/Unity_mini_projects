@@ -22,6 +22,7 @@ abstract public class ATetrimino : MonoBehaviour
 
     private void build_form()
     {
+        // Modification d'un axe qui ne devrait pas etre fait a ce moment la
         int e = 0;
         Transform[] preview_blocks = this.preview.GetComponentsInChildren<Transform>();
         for (int i = 0; i < blocks.GetLength(0); ++i)
@@ -56,17 +57,57 @@ abstract public class ATetrimino : MonoBehaviour
             this.set_form(this.current_form, Game_manager.instance.current_face);
         }
         this.build_form();
-        if (this.children_blocks[this.index_leftmost].transform.position.x <= 0)
+        switch (Game_manager.instance.current_face)
         {
-            this.transform.position += new Vector3(-this.children_blocks[this.index_leftmost].transform.position.x, 0, 0);
-        }
-        else if (this.children_blocks[this.index_rightmost].transform.position.x >= 12)
-        {
-            this.transform.position += new Vector3(12 - this.children_blocks[this.index_rightmost].transform.position.x, 0, 0);
+            case Constants.FRONT:
+                if (this.children_blocks[this.index_leftmost].transform.position.x <= 0)
+                {
+                    this.transform.position += new Vector3(-this.children_blocks[this.index_leftmost].transform.position.x, 0, 0);
+                }
+                else if (this.children_blocks[this.index_rightmost].transform.position.x >= 12)
+                {
+                    this.transform.position += new Vector3(12 - this.children_blocks[this.index_rightmost].transform.position.x, 0, 0);
+                }
+                break;
+
+            case Constants.LEFT:
+                if (this.children_blocks[this.index_leftmost].transform.position.z >= 12)
+                {
+                    this.transform.position += new Vector3(0, 0, 12 - this.children_blocks[this.index_leftmost].transform.position.z);
+                }
+                else if (this.children_blocks[this.index_rightmost].transform.position.z <= 0)
+                {
+                    this.transform.position += new Vector3(0, 0, -this.children_blocks[this.index_rightmost].transform.position.z);
+                }
+                break;
+
+            case Constants.BACK:
+                if (this.children_blocks[this.index_leftmost].transform.position.x >= 12)
+                {
+                    this.transform.position += new Vector3(12 - this.children_blocks[this.index_leftmost].transform.position.x, 0, 0);
+                }
+                else if (this.children_blocks[this.index_rightmost].transform.position.x <= 0)
+                {
+                    this.transform.position += new Vector3(-this.children_blocks[this.index_rightmost].transform.position.x, 0, 0);
+                }
+                break;
+
+            case Constants.RIGHT:
+                if (this.children_blocks[this.index_leftmost].transform.position.z <= 0)
+                {
+                    this.transform.position += new Vector3(0, 0, -this.children_blocks[this.index_leftmost].transform.position.z);
+                }
+                else if (this.children_blocks[this.index_rightmost].transform.position.z >= 12)
+                {
+                    this.transform.position += new Vector3(0, 0, 12 - this.children_blocks[this.index_rightmost].transform.position.z);
+                }
+                break;
+
+
         }
         if (this.children_blocks[0].transform.position.y <= 0)
         {
-            this.transform.position = new Vector3(this.transform.position.x, 0, 0);
+            this.transform.position = new Vector3(this.transform.position.x, 0, this.transform.position.z);
         }
     }
 
@@ -132,13 +173,47 @@ abstract public class ATetrimino : MonoBehaviour
             {
                 if (Input.GetKey(KeyCode.D))
                 {
-                    if (this.children_blocks[this.index_rightmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
-                        this.transform.position += Vector3.right;
+                    switch (Game_manager.instance.current_face)
+                    {
+                        case Constants.FRONT:
+                            if (this.children_blocks[this.index_rightmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
+                                this.transform.position += Vector3.right;
+                            break;
+                        case Constants.LEFT:
+                            if (this.children_blocks[this.index_rightmost].transform.position.z > 0 && Grid_manager.instance.is_front_free())
+                                this.transform.position += Vector3.back;
+                            break;
+                        case Constants.BACK:
+                            if (this.children_blocks[this.index_rightmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
+                                this.transform.position += Vector3.left;
+                            break;
+                        case Constants.RIGHT:
+                            if (this.children_blocks[this.index_rightmost].transform.position.z < 12 && Grid_manager.instance.is_back_free())
+                                this.transform.position += Vector3.forward;
+                            break;
+                    }
                 }
                 else if (Input.GetKey(KeyCode.Q))
                 {
-                    if (this.children_blocks[this.index_leftmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
-                        this.transform.position += Vector3.left;
+                    switch (Game_manager.instance.current_face)
+                    {
+                        case Constants.FRONT:
+                            if (this.children_blocks[this.index_leftmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
+                                this.transform.position += Vector3.left;
+                            break;
+                        case Constants.LEFT:
+                            if (this.children_blocks[this.index_leftmost].transform.position.z < 12 && Grid_manager.instance.is_back_free())
+                                this.transform.position += Vector3.forward;
+                            break;
+                        case Constants.BACK:
+                            if (this.children_blocks[this.index_leftmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
+                                this.transform.position += Vector3.right;
+                            break;
+                        case Constants.RIGHT:
+                            if (this.children_blocks[this.index_leftmost].transform.position.z > 0 && Grid_manager.instance.is_front_free())
+                                this.transform.position += Vector3.back;
+                            break;
+                    }
                 }
                 else if (Input.GetKey(KeyCode.S))
                 {

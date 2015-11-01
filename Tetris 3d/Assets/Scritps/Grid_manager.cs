@@ -128,7 +128,7 @@ public class Grid_manager : MonoBehaviour {
                         int child_y = (int)this.current.transform.position.y + i;
                         int child_x = (int)this.current.transform.position.x + j;
                         int child_z = (int)this.current.transform.position.z + k;
-                        if (child_y >= 0 && child_y <= 24 && child_x >= 0 && child_x <= 12)
+                        if (child_y >= 0 && child_y <= 24 && child_x >= 0 && child_x <= 12 && child_z >= 0 && child_z <= 12)
                         {
                             if (this.grid[child_y, child_x, child_z] != null)
                                 return (false);
