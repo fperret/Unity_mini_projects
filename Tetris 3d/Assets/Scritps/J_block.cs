@@ -10,80 +10,401 @@ public class J_block : ATetrimino
         base.Start();
     }
 
-    override public void set_form(int form, int face)
+    public void set_front(int form)
     {
-        if (form == 0)
+        switch (form)
         {
-            for (int i = 0; i < 3; ++i)
-            {
-                for (int j = 0; j < 3; ++j)
+            case 0:
+                for (int i = 0; i < 3; ++i)
                 {
-                    if (i == 2)
-                        this.blocks[i, j, 0] = 0;
-                    else if (i == 0)
-                        this.blocks[i, j, 0] = 1;
-                    else if (j == 0)
-                        this.blocks[i, j, 0] = 1;
-                    else
-                        this.blocks[i, j, 0] = 0;
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (i == 2)
+                                this.blocks[i, j, k] = 0;
+                            else if (i == 0 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (j == 0 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
                 }
-            }
-            this.index_leftmost = 0;
-            this.index_rightmost = 2;
-        }
-        else if (form == 1)
-        {
-            for (int i = 0; i < 3; ++i)
-            {
-                for (int j = 0; j < 3; ++j)
+                this.index_leftmost = 0;
+                this.index_rightmost = 2;
+                break;
+
+            case 1:
+                for (int i = 0; i < 3; ++i)
                 {
-                    if (j == 1)
-                        this.blocks[i, j, 0] = 1;
-                    else if (i == 2 && j == 2)
-                        this.blocks[i, j, 0] = 1;
-                    else
-                        this.blocks[i, j, 0] = 0;
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (j == 1 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (i == 2 && j == 2 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
                 }
-            }
-            this.index_leftmost = 0;
-            this.index_rightmost = 3;
-        }
-        else if (form == 2)
-        {
-            for (int i = 0; i < 3; ++i)
-            {
-                for (int j = 0; j < 3; ++j)
+                this.index_leftmost = 0;
+                this.index_rightmost = 3;
+                break;
+
+            case 2:
+                for (int i = 0; i < 3; ++i)
                 {
-                    if (i == 2)
-                        this.blocks[i, j, 0] = 0;
-                    else if (i == 1)
-                        this.blocks[i, j, 0] = 1;
-                    else if (j == 2)
-                        this.blocks[i, j, 0] = 1;
-                    else
-                        this.blocks[i, j, 0] = 0;
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (i == 2)
+                                this.blocks[i, j, k] = 0;
+                            else if (i == 1 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (j == 2 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
                 }
-            }
-            this.index_leftmost = 1;
-            this.index_rightmost = 0;
-        }
-        else if (form == 3)
-        {
-            for (int i = 0; i < 3; ++i)
-            {
-                for (int j = 0; j < 3; ++j)
+                this.index_leftmost = 1;
+                this.index_rightmost = 0;
+                break;
+
+            case 3:
+                for (int i = 0; i < 3; ++i)
                 {
-                    if (j == 1)
-                        this.blocks[i, j, 0] = 1;
-                    else if (i == 0 && j == 0)
-                        this.blocks[i, j, 0] = 1;
-                    else
-                        this.blocks[i, j, 0] = 0;
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (j == 1 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (i == 0 && j == 0 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
                 }
-            }
-            this.index_leftmost = 0;
-            this.index_rightmost = 1;
+                this.index_leftmost = 0;
+                this.index_rightmost = 1;
+                break;
+
+            default:
+                break;
         }
     }
 
+    public void set_left(int form)
+    {
+        switch (form)
+        {
+            case 0:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (i == 2)
+                                this.blocks[i, j, k] = 0;
+                            else if (i == 0 && j == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (k == 2 && j == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 2;
+                this.index_rightmost = 0;
+                break;
+
+            case 1:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (k == 1 && j == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (i == 2 && k == 0 && j == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 0;
+                this.index_rightmost = 2;
+                break;
+
+            case 2:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (i == 2)
+                                this.blocks[i, j, k] = 0;
+                            else if (i == 1 && j == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (k == 0 && j == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 3;
+                this.index_rightmost = 0;
+                break;
+
+            case 3:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (k == 1 && j == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (i == 0 && k == 2 && j == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 1;
+                this.index_rightmost = 0;
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void set_back(int form)
+    {
+        switch (form)
+        {
+            case 0:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (i == 2)
+                                this.blocks[i, j, k] = 0;
+                            else if (i == 0 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (j == 2 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 2;
+                this.index_rightmost = 0;
+                break;
+
+            case 1:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (j == 1 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (i == 2 && j == 0 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 0;
+                this.index_rightmost = 2;
+                break;
+
+            case 2:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (i == 2)
+                                this.blocks[i, j, k] = 0;
+                            else if (i == 1 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (j == 0 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 3;
+                this.index_rightmost = 0;
+                break;
+
+            case 3:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (j == 1 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else if (i == 0 && j == 2 && k == 0)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 1;
+                this.index_rightmost = 0;
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public void set_right(int form)
+    {
+        switch (form)
+        {
+            case 0:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (i == 2)
+                                this.blocks[i, j, k] = 0;
+                            else if (i == 0 && j == 2)
+                                this.blocks[i, j, k] = 1;
+                            else if (k == 0 && j == 2)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 0;
+                this.index_rightmost = 2;
+                break;
+
+            case 1:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (k == 1 && j == 2)
+                                this.blocks[i, j, k] = 1;
+                            else if (i == 2 && k == 2 && j == 2)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 0;
+                this.index_rightmost = 3;
+                break;
+
+            case 2:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (i == 2)
+                                this.blocks[i, j, k] = 0;
+                            else if (i == 1 && j == 2)
+                                this.blocks[i, j, k] = 1;
+                            else if (k == 2 && j == 2)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 1;
+                this.index_rightmost = 0;
+                break;
+
+            case 3:
+                for (int i = 0; i < 3; ++i)
+                {
+                    for (int j = 0; j < 3; ++j)
+                    {
+                        for (int k = 0; k < 3; ++k)
+                        {
+                            if (k == 1 && j == 2)
+                                this.blocks[i, j, k] = 1;
+                            else if (i == 0 && k == 0 && j == 2)
+                                this.blocks[i, j, k] = 1;
+                            else
+                                this.blocks[i, j, k] = 0;
+                        }
+                    }
+                }
+                this.index_leftmost = 0;
+                this.index_rightmost = 1;
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    public override void set_form(int form, int face)
+    {
+        switch (face)
+        {
+            case Constants.FRONT:
+                this.set_front(form);
+                break;
+
+            case Constants.LEFT:
+                this.set_left(form);
+                break;
+
+            case Constants.BACK:
+                this.set_back(form);
+                break;
+
+            case Constants.RIGHT:
+                this.set_right(form);
+                break;
+
+            default:
+                break;
+        }
+    }
 }

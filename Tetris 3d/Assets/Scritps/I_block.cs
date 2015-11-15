@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class I_block : ATetrimino
 {
@@ -10,7 +11,7 @@ public class I_block : ATetrimino
         base.Start();
     }
 
-    private void set_front(int form)
+    public void set_front(int form)
     {
         if (form == 0 || form == 2)
         {
@@ -68,7 +69,7 @@ public class I_block : ATetrimino
         }
     }
 
-    private void set_left(int form)
+    public void set_left(int form)
     {
         if (form == 0 || form == 2)
         {
@@ -126,7 +127,7 @@ public class I_block : ATetrimino
         }
     }
 
-    private void set_back(int form)
+    public void set_back(int form)
     {
         if (form == 0 || form == 2)
         {
@@ -184,7 +185,7 @@ public class I_block : ATetrimino
         }
     }
 
-    private void set_right(int form)
+    public void set_right(int form)
     {
         if (form == 0 || form == 2)
         {
@@ -242,7 +243,7 @@ public class I_block : ATetrimino
         }
     }
 
-    override public void set_form(int form, int face)
+    public override void set_form(int form, int face)
     {
         switch (face)
         {
