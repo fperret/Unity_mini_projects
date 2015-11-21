@@ -74,9 +74,12 @@
     <Compile Include="Assets\Scritps\Game_manager.cs" />
     <Compile Include="Assets\Scritps\Grid_manager.cs" />
     <Compile Include="Assets\Scritps\I_block.cs" />
+    <Compile Include="Assets\Scritps\Input_button.cs" />
+    <Compile Include="Assets\Scritps\Inputs_manager.cs" />
     <Compile Include="Assets\Scritps\IntShuffleBag.cs" />
     <Compile Include="Assets\Scritps\J_block.cs" />
     <Compile Include="Assets\Scritps\L_block.cs" />
+    <Compile Include="Assets\Scritps\Menu_manager.cs" />
     <Compile Include="Assets\Scritps\O_block.cs" />
     <Compile Include="Assets\Scritps\S_block.cs" />
     <Compile Include="Assets\Scritps\T_block.cs" />
