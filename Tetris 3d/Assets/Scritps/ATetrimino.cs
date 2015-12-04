@@ -199,7 +199,7 @@ abstract public class ATetrimino : MonoBehaviour
             this.time_call += Time.deltaTime;
             if (this.time_call >= 0.08f)
             {
-                if (Input.GetKey(KeyCode.D))
+                if (Input.GetKey(Inputs_manager.instance.move_right_key))
                 {
                     switch (Game_manager.instance.current_face)
                     {
@@ -221,7 +221,7 @@ abstract public class ATetrimino : MonoBehaviour
                             break;
                     }
                 }
-                else if (Input.GetKey(KeyCode.Q))
+                else if (Input.GetKey(Inputs_manager.instance.move_left_key))
                 {
                     switch (Game_manager.instance.current_face)
                     {
@@ -255,22 +255,22 @@ abstract public class ATetrimino : MonoBehaviour
                     if (this.children_blocks[0].transform.position.z < 12 && Grid_manager.instance.is_back_free())
                         this.transform.position += Vector3.forward;
                 }
-                else if (Input.GetKey(KeyCode.W))
+                else if (Input.GetKey(Inputs_manager.instance.fall_key))
                 {
                     this.fall();
                 }
                 this.time_call = 0;
             }
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(Inputs_manager.instance.rotate_key))
             {
                 this.rotate();
             }
-            if  (Input.GetKeyDown(KeyCode.Space))
+            if  (Input.GetKeyDown(Inputs_manager.instance.drop_key))
             {
                 this.instant_drop();
             }
             this.place_preview();
-            if (Input.GetKeyDown(KeyCode.Return) && !this.from_storage)
+            if (Input.GetKeyDown(Inputs_manager.instance.store_key) && !this.from_storage)
             {
                 Game_manager.instance.trade_from_storage(this.tetrimino_id);
                 Destroy(this.preview);

@@ -29,6 +29,7 @@ public class Input_button : MonoBehaviour {
         this.setter_dispatch["Drop"] = (value) => Inputs_manager.instance.set_drop_key(value);
         this.setter_dispatch["Fall"] = (value) => Inputs_manager.instance.set_fall_key(value);
         this.setter_dispatch["Store"] = (value) => Inputs_manager.instance.set_store_key(value);
+
     }
 
     public void button_clicked ()
@@ -54,7 +55,11 @@ public class Input_button : MonoBehaviour {
             {
                 if (Input.GetKeyDown(key))
                 {
-                    this.setter_dispatch[this.name](key);
+                    if (Inputs_manager.instance.check_keycode_free(key))
+                    {
+                        this.setter_dispatch[this.name](key);
+                        GetComponent<Button_set_text>().set_text_content(key);
+                    }
                     this.button_clicked();
                     break;
                 }
