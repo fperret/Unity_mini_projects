@@ -34,16 +34,17 @@ public class Audio_manager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(Inputs_manager.instance.mute_key))
         {
             if (this.audio_source.isPlaying)
             {
-                this.audio_source.Stop();
+                this.audio_source.Pause();
                 CancelInvoke("next_track");
             }
             else
             {
-                this.next_track();
+                this.audio_source.UnPause();
+                Invoke("next_track", (musics[current_music].length - audio_source.time));
             }
         }
 	}

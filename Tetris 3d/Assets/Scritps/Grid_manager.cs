@@ -152,14 +152,242 @@ public class Grid_manager : MonoBehaviour {
         return (false);
     }
 
-    private bool check_row_full(int i, int k)
+    private bool check_row_full(int i)
     {
-        for (int j = 0; j < this.grid.GetLength(1); ++j)
+        switch (Game_manager.instance.current_face)
         {
-            if (this.grid[i, j, k] == null)
+            case Constants.FRONT:
+            case Constants.BACK:
+                for (int j = 0; j < this.grid.GetLength(1); ++j)
+                {
+                    bool empty = true;
+                    for (int k = 0; k < this.grid.GetLength(2); ++k)
+                    {
+                        if (this.grid[i, j, k] != null)
+                            empty = false;
+                    }
+                    if (empty)
+                        return (false);
+                }
+                return (true);
+
+            case Constants.LEFT:
+            case Constants.RIGHT:
+                for (int k = 0; k < this.grid.GetLength(2); ++k)
+                {
+                    bool empty = true;
+                    for (int j = 0; j < this.grid.GetLength(1); ++j)
+                    {
+                        if (this.grid[i, j, k] != null)
+                            empty = false;
+                    }
+                    if (empty)
+                        return (false);
+                }
+                return (true);
+
+            default :
                 return (false);
         }
-        return (true);
+    }
+
+    private void destroy_row(int i)
+    {
+        switch (Game_manager.instance.current_face)
+        {
+            case Constants.FRONT:
+                for (int j = 0; j < this.grid.GetLength(1); ++j)
+                {
+                    for (int k = 0; k < this.grid.GetLength(2); ++k)
+                    {
+                        if (this.grid[i, j, k] != null)
+                        {
+                            Destroy(this.grid[i, j, k]);
+                            this.grid[i, j, k] = null;
+                            break;
+                        }
+                    }
+                }
+                break;
+
+            case Constants.BACK:
+                for (int j = 0; j < this.grid.GetLength(1); ++j)
+                {
+                    for (int k = (this.grid.GetLength(2) - 1); k >= 0; --k)
+                    {
+                        if (this.grid[i, j, k] != null)
+                        {
+                            Destroy(this.grid[i, j, k]);
+                            this.grid[i, j, k] = null;
+                            break;
+                        }
+                    }
+                }
+                break;
+
+
+            case Constants.LEFT:
+                for (int k = 0; k < this.grid.GetLength(2); ++k)
+                {
+                    for (int j = 0; j < this.grid.GetLength(1); ++j)
+                    {
+                        if (this.grid[i, j, k] != null)
+                        {
+                            Destroy(this.grid[i, j, k]);
+                            this.grid[i, j, k] = null;
+                            break;
+                        }
+                    }
+                }
+                break;
+
+            case Constants.RIGHT:
+                for (int k = 0; k < this.grid.GetLength(2); ++k)
+                {
+                    for (int j = (this.grid.GetLength(1) - 1); j >= 0; --j)
+                    {
+                        if (this.grid[i, j, k] != null)
+                        {
+                            Destroy(this.grid[i, j, k]);
+                            this.grid[i, j, k] = null;
+                            break;
+                        }
+                    }
+                }
+                break;
+
+            default :
+                break;
+        }
+    }
+
+    private void move_blocks_down(int row)
+    {
+        switch (Game_manager.instance.current_face)
+        {
+            case Constants.FRONT:
+                for (int i = row + 1; i < this.grid.GetLength(0); ++i)
+                {
+                    for (int j = 0; j < this.grid.GetLength(1); ++j)
+                    {
+                        for (int k = 0; k < this.grid.GetLength(2); ++k)
+                        {
+                            if (this.grid[i, j, k] != null)
+                            {
+                                bool is_bot_clear = true;
+                                for (int tmp_k = 0; tmp_k <= k; ++tmp_k)
+                                {
+                                    if (this.grid[i - 1, j, tmp_k] != null)
+                                    {
+                                        is_bot_clear = false;
+                                    }
+                                }
+                                if (is_bot_clear)
+                                {
+                                    this.grid[i, j, k].transform.position += Vector3.down;
+                                    this.grid[i - 1, j, k] = this.grid[i, j, k];
+                                    this.grid[i, j, k] = null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case Constants.LEFT:
+                for (int i = row + 1; i < this.grid.GetLength(0); ++i)
+                {
+                    for (int k = 0; k < this.grid.GetLength(2); ++k)
+                    {
+                        for (int j = 0; j < this.grid.GetLength(1); ++j)
+                        {
+                            if (this.grid[i, j, k] != null)
+                            {
+                                bool is_bot_clear = true;
+                                for (int tmp_j = 0; tmp_j <= j; ++tmp_j)
+                                {
+                                    if (this.grid[i - 1, tmp_j, k] != null)
+                                    {
+                                        is_bot_clear = false;
+                                    }
+                                }
+                                if (is_bot_clear)
+                                {
+                                    this.grid[i, j, k].transform.position += Vector3.down;
+                                    this.grid[i - 1, j, k] = this.grid[i, j, k];
+                                    this.grid[i, j, k] = null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case Constants.BACK:
+                 for (int i = row + 1; i < this.grid.GetLength(0); ++i)
+                {
+                    for (int j = 0; j < this.grid.GetLength(1); ++j)
+                    {
+                        for (int k = (this.grid.GetLength(2) - 1); k >= 0; --k)
+                        {
+                            if (this.grid[i, j, k] != null)
+                            {
+                                bool is_bot_clear = true;
+                                for (int tmp_k = (this.grid.GetLength(2) - 1); tmp_k >= k; --tmp_k)
+                                {
+                                    if (this.grid[i - 1, j, tmp_k] != null)
+                                    {
+                                        is_bot_clear = false;
+                                    }
+                                }
+                                if (is_bot_clear)
+                                {
+                                    this.grid[i, j, k].transform.position += Vector3.down;
+                                    this.grid[i - 1, j, k] = this.grid[i, j, k];
+                                    this.grid[i, j, k] = null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+               break;
+
+            case Constants.RIGHT:
+                for (int i = row + 1; i < this.grid.GetLength(0); ++i)
+                {
+                    for (int k = 0; k < this.grid.GetLength(2); ++k)
+                    {
+                        for (int j = (this.grid.GetLength(1) - 1); j >= 0; --j)
+                        {
+                            if (this.grid[i, j, k] != null)
+                            {
+                                bool is_bot_clear = true;
+                                for (int tmp_j = (this.grid.GetLength(1) - 1); tmp_j >= 0; --tmp_j)
+                                {
+                                    if (this.grid[i - 1, tmp_j, k] != null)
+                                    {
+                                        is_bot_clear = false;
+                                    }
+                                }
+                                if (is_bot_clear)
+                                {
+                                    this.grid[i, j, k].transform.position += Vector3.down;
+                                    this.grid[i - 1, j, k] = this.grid[i, j, k];
+                                    this.grid[i, j, k] = null;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
     public void update_new_drop(bool instant_drop)
@@ -181,27 +409,10 @@ public class Grid_manager : MonoBehaviour {
         for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
         {
             int row = (int)this.current.children_blocks[e].transform.position.y;
-            int depth = (int)this.current.children_blocks[e].transform.position.z;
-            if (this.check_row_full(row, depth))
+            if (this.check_row_full(row))
             {
-                for (int j = 0; j < this.grid.GetLength(1); ++j)
-                {
-                    Destroy(this.grid[row, j, depth]);
-                }
-                for (int i = row + 1; i < this.grid.GetLength(0); ++i)
-                {
-                    for (int j = 0; j < this.grid.GetLength(1); ++j)
-                    {
-                        for (int k = 0; k < this.grid.GetLength(2); ++k)
-                        {
-                            if (this.grid[i, j, k] != null)
-                            {
-                                this.grid[i, j, k].transform.position += Vector3.down;
-                            }
-                            this.grid[i - 1, j, k] = this.grid[i, j, k];
-                        }
-                    }
-                }
+                destroy_row(row);
+                move_blocks_down(row);
                 Game_manager.instance.update_lines(1);
                 Game_manager.instance.update_score(50);
             }

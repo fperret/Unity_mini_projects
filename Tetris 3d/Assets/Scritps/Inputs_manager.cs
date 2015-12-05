@@ -11,6 +11,7 @@ public class Inputs_manager : MonoBehaviour {
     public KeyCode drop_key;
     public KeyCode fall_key;
     public KeyCode store_key;
+    public KeyCode menu_key;
     
     public void set_move_left_key (KeyCode value)
     {
@@ -168,12 +169,14 @@ public class Inputs_manager : MonoBehaviour {
         if ((tmp = PlayerPrefs.GetString("fall_key")) != "")
             set_fall_key((KeyCode)System.Enum.Parse(typeof(KeyCode), tmp));
         else
-            set_fall_key(KeyCode.S);
+            set_fall_key(KeyCode.T);
 
         if ((tmp = PlayerPrefs.GetString("store_key")) != "")
             set_store_key((KeyCode)System.Enum.Parse(typeof(KeyCode), tmp));
         else
             set_store_key(KeyCode.Return);
+
+        menu_key = KeyCode.Escape;
     }
 
 	// Use this for initialization
