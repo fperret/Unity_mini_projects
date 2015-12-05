@@ -70,7 +70,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scritps\ATetrimino.cs" />
     <Compile Include="Assets\Scritps\Audio_manager.cs" />
-    <Compile Include="Assets\Scritps\Button_set_text.cs" />
     <Compile Include="Assets\Scritps\Constants.cs" />
     <Compile Include="Assets\Scritps\Game_manager.cs" />
     <Compile Include="Assets\Scritps\Grid_manager.cs" />

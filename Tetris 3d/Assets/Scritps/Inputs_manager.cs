@@ -99,6 +99,43 @@ public class Inputs_manager : MonoBehaviour {
        }
     }
 
+    public void setter_dispatch(string s_key, KeyCode value)
+    {
+        switch (s_key)
+        {
+            case "Move left":
+                set_move_left_key(value);
+                break;
+
+            case "Move right":
+                set_move_right_key(value);
+                break;
+
+            case "Rotate":
+                set_rotate_key(value);
+                break;
+
+            case "Mute":
+                set_mute_key(value);
+                break;
+
+            case "Drop":
+                set_drop_key(value);
+                break;
+
+            case "Fall":
+                set_fall_key(value);
+                break;
+
+            case "Store":
+                set_store_key(value);
+                break;
+
+            default:
+                break;
+        }
+    }
+
     private void load_inputs_from_playerprefs()
     {
         string tmp;
