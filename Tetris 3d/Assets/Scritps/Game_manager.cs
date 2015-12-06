@@ -70,7 +70,7 @@ public class Game_manager : MonoBehaviour
 
     private void change_face()
     {
-        if (this.current_face == Constants.UP)
+        if (this.current_face == Constants.RIGHT)
             this.current_face = Constants.FRONT;
         else
             this.current_face++;

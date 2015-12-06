@@ -18,35 +18,7 @@ abstract public class ATetrimino : MonoBehaviour
     private bool is_controlled;
     private float time_call;
 
-    /*   public abstract void set_front(int form);
-       public abstract void set_left(int form);
-       public abstract void set_back(int form);
-       public abstract void set_right(int form);
-       */
     public abstract void set_form(int form, int face);
- /*   {
-        switch (face)
-        {
-            case Constants.FRONT:
-                this.set_front(form);
-                break;
-
-            case Constants.LEFT:
-                this.set_left(form);
-                break;
-
-            case Constants.BACK:
-                this.set_back(form);
-                break;
-
-            case Constants.RIGHT:
-                this.set_right(form);
-                break;
-
-            default:
-                break;
-        }
-    }*/
 
     private void build_form()
     {
