@@ -12,7 +12,8 @@ public class Game_manager : MonoBehaviour
     public Text text_level;
     public Text text_score;
     public int level;
-    public bool pause;
+    public bool game_pause;
+    private bool menu_pause;
     public int storage;
     public int current_face;
 
@@ -37,34 +38,34 @@ public class Game_manager : MonoBehaviour
     {
         this.lines = 0;
         this.score = 0;
-        this.pause = false;
+        this.game_pause = false;
+        this.menu_pause = false;
         this.storage = -1;
         this.current_face = Constants.FRONT;
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
-	    if (Input.GetKeyDown(KeyCode.P))
+        if (!menu_pause)
         {
-            if (!pause)
+            if (Input.GetKeyDown(KeyCode.P))
             {
-                Time.timeScale = 0;
-                this.pause = true;
+                if (!game_pause)
+                {
+                    Time.timeScale = 0;
+                    this.game_pause = true;
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                    this.game_pause = false;
+                }
             }
-            else
+            if (Input.GetKeyDown(KeyCode.F) && !game_pause)
             {
-                Time.timeScale = 1;
-                this.pause = false;
+                this.change_face();
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            this.change_face();
         }
 	}
 
@@ -123,5 +124,19 @@ public class Game_manager : MonoBehaviour
     public void game_over()
     {
         Time.timeScale = 0;
+    }
+
+    public void exit_game()
+    {
+        // Save Player prefs
+        PlayerPrefs.SetString("move_left_key", Inputs_manager.instance.move_left_key.ToString());
+
+        Application.Quit();
+    }
+
+    public void pause_from_menu(bool state)
+    {
+        menu_pause = state;
+        game_pause = state;
     }
 }

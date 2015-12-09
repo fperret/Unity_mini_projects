@@ -166,7 +166,7 @@ abstract public class ATetrimino : MonoBehaviour
 
     public void Update()
     {
-        if (this.is_controlled && !Game_manager.instance.pause)
+        if (this.is_controlled && !Game_manager.instance.game_pause)
         {
             this.time_call += Time.deltaTime;
             if (this.time_call >= 0.08f)
