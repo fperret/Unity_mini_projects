@@ -46,7 +46,7 @@ public class Input_button : MonoBehaviour {
             {
                 if (Input.GetKeyDown(key))
                 {
-                    if (Inputs_manager.instance.check_keycode_free(key))
+                    if (Inputs_manager.instance.is_keycode_valid(key))
                     {
                         Inputs_manager.instance.setter_dispatch(this.name, key);
                         text.text = key.ToString();                        

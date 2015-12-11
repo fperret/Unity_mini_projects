@@ -164,57 +164,67 @@ abstract public class ATetrimino : MonoBehaviour
         CancelInvoke("fall");
     }
 
+    private void move_left()
+    {
+        switch (Game_manager.instance.current_face)
+        {
+            case Constants.FRONT:
+                if (this.children_blocks[this.index_leftmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
+                    this.transform.position += Vector3.left;
+                break;
+            case Constants.LEFT:
+                if (this.children_blocks[this.index_leftmost].transform.position.z < 12 && Grid_manager.instance.is_back_free())
+                    this.transform.position += Vector3.forward;
+                break;
+            case Constants.BACK:
+                if (this.children_blocks[this.index_leftmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
+                    this.transform.position += Vector3.right;
+                break;
+            case Constants.RIGHT:
+                if (this.children_blocks[this.index_leftmost].transform.position.z > 0 && Grid_manager.instance.is_front_free())
+                    this.transform.position += Vector3.back;
+                break;
+        }
+    }
+
+    private void move_right()
+    {
+        switch (Game_manager.instance.current_face)
+        {
+            case Constants.FRONT:
+                if (this.children_blocks[this.index_rightmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
+                    this.transform.position += Vector3.right;
+                break;
+            case Constants.LEFT:
+                if (this.children_blocks[this.index_rightmost].transform.position.z > 0 && Grid_manager.instance.is_front_free())
+                    this.transform.position += Vector3.back;
+                break;
+            case Constants.BACK:
+                if (this.children_blocks[this.index_rightmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
+                    this.transform.position += Vector3.left;
+                break;
+            case Constants.RIGHT:
+                if (this.children_blocks[this.index_rightmost].transform.position.z < 12 && Grid_manager.instance.is_back_free())
+                    this.transform.position += Vector3.forward;
+                break;
+        }
+    }
+
     public void Update()
     {
         if (this.is_controlled && !Game_manager.instance.game_pause)
         {
             this.time_call += Time.deltaTime;
-            if (this.time_call >= 0.08f)
+            if (Input.GetKeyDown(Inputs_manager.instance.move_right_key))
+                move_right();
+            else if (Input.GetKeyDown(Inputs_manager.instance.move_left_key))
+                move_left();
+            else if (this.time_call >= 0.08f)
             {
                 if (Input.GetKey(Inputs_manager.instance.move_right_key))
-                {
-                    switch (Game_manager.instance.current_face)
-                    {
-                        case Constants.FRONT:
-                            if (this.children_blocks[this.index_rightmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
-                                this.transform.position += Vector3.right;
-                            break;
-                        case Constants.LEFT:
-                            if (this.children_blocks[this.index_rightmost].transform.position.z > 0 && Grid_manager.instance.is_front_free())
-                                this.transform.position += Vector3.back;
-                            break;
-                        case Constants.BACK:
-                            if (this.children_blocks[this.index_rightmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
-                                this.transform.position += Vector3.left;
-                            break;
-                        case Constants.RIGHT:
-                            if (this.children_blocks[this.index_rightmost].transform.position.z < 12 && Grid_manager.instance.is_back_free())
-                                this.transform.position += Vector3.forward;
-                            break;
-                    }
-                }
+                    move_right();
                 else if (Input.GetKey(Inputs_manager.instance.move_left_key))
-                {
-                    switch (Game_manager.instance.current_face)
-                    {
-                        case Constants.FRONT:
-                            if (this.children_blocks[this.index_leftmost].transform.position.x > 0 && Grid_manager.instance.is_left_free())
-                                this.transform.position += Vector3.left;
-                            break;
-                        case Constants.LEFT:
-                            if (this.children_blocks[this.index_leftmost].transform.position.z < 12 && Grid_manager.instance.is_back_free())
-                                this.transform.position += Vector3.forward;
-                            break;
-                        case Constants.BACK:
-                            if (this.children_blocks[this.index_leftmost].transform.position.x < 12 && Grid_manager.instance.is_right_free())
-                                this.transform.position += Vector3.right;
-                            break;
-                        case Constants.RIGHT:
-                            if (this.children_blocks[this.index_leftmost].transform.position.z > 0 && Grid_manager.instance.is_front_free())
-                                this.transform.position += Vector3.back;
-                            break;
-                    }
-                }
+                    move_left();
                 else if (Input.GetKey(KeyCode.S))
                 {
                     // Changer index pour block le plus en avant

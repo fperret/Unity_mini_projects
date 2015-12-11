@@ -54,7 +54,7 @@ public class Inputs_manager : MonoBehaviour {
         load_inputs_from_playerprefs();
     }
 
-    public bool check_keycode_free(KeyCode value)
+    public bool is_keycode_valid(KeyCode value)
     {
         // Should pop a warning window
         if (value == move_left_key ||
@@ -63,7 +63,8 @@ public class Inputs_manager : MonoBehaviour {
             value == mute_key ||
             value == drop_key ||
             value == fall_key ||
-            value == store_key)
+            value == store_key ||
+            value == KeyCode.Escape)
         {
             return (false);
         }

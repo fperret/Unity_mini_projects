@@ -56,22 +56,22 @@ public class Grid_manager : MonoBehaviour {
     public bool can_move_down(GameObject game_object)
     {
         Transform[] blocks = game_object.GetComponentsInChildren<Transform>();
-        foreach (Transform block in blocks)
+/*        foreach (Transform block in blocks)
         {
             int i = (int)block.position.y;
             if (i <= 0 || (i <= 23 && this.grid[i - 1,
                                                (int)block.position.x,
                                                (int)block.position.z] != null))
                 return (false);
-        }
-/*        for (int e = 1; e < blocks.GetLength(0); ++e)
+        }*/
+        for (int e = 1; e < blocks.GetLength(0); ++e)
         {
             int i = (int)blocks[e].position.y;
             if (i <= 0 || (i <= 23 && this.grid[i - 1,
                                                 (int)blocks[e].position.x,
                                                 (int)blocks[e].position.z] != null))
                 return (false);
-        }*/
+        }
         return (true);
     }
 
