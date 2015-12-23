@@ -11,9 +11,9 @@ public class I_block : ATetrimino
         base.Start();
     }
 
-    public void set_front(int form)
+    public void set_front()
     {
-        if (form == 0 || form == 2)
+        if (this.current_form == 0 || this.current_form == 2)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -31,7 +31,7 @@ public class I_block : ATetrimino
             this.index_leftmost = 0;
             this.index_rightmost = 3;
         }
-        else if (form == 1)
+        else if (this.current_form == 1)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -49,7 +49,7 @@ public class I_block : ATetrimino
             this.index_leftmost = 0;
             this.index_rightmost = 0;
         }
-        else if (form == 3)
+        else if (this.current_form == 3)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -69,9 +69,9 @@ public class I_block : ATetrimino
         }
     }
 
-    public void set_left(int form)
+    public void set_left()
     {
-        if (form == 0 || form == 2)
+        if (this.current_form == 0 || this.current_form == 2)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -89,7 +89,7 @@ public class I_block : ATetrimino
             this.index_leftmost = 3;
             this.index_rightmost = 0;
         }
-        else if (form == 1)
+        else if (this.current_form == 1)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -107,7 +107,7 @@ public class I_block : ATetrimino
             this.index_leftmost = 0;
             this.index_rightmost = 0;
         }
-        else if (form == 3)
+        else if (this.current_form == 3)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -127,9 +127,9 @@ public class I_block : ATetrimino
         }
     }
 
-    public void set_back(int form)
+    public void set_back()
     {
-        if (form == 0 || form == 2)
+        if (this.current_form == 0 || this.current_form == 2)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -147,7 +147,7 @@ public class I_block : ATetrimino
             this.index_leftmost = 3;
             this.index_rightmost = 0;
         }
-        else if (form == 1)
+        else if (this.current_form == 1)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -165,7 +165,7 @@ public class I_block : ATetrimino
             this.index_leftmost = 0;
             this.index_rightmost = 0;
         }
-        else if (form == 3)
+        else if (this.current_form == 3)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -185,9 +185,9 @@ public class I_block : ATetrimino
         }
     }
 
-    public void set_right(int form)
+    public void set_right()
     {
-        if (form == 0 || form == 2)
+        if (this.current_form == 0 || this.current_form == 2)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -205,7 +205,7 @@ public class I_block : ATetrimino
             this.index_leftmost = 0;
             this.index_rightmost = 3;
         }
-        else if (form == 1)
+        else if (this.current_form == 1)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -223,7 +223,7 @@ public class I_block : ATetrimino
             this.index_leftmost = 0;
             this.index_rightmost = 0;
         }
-        else if (form == 3)
+        else if (this.current_form == 3)
         {
             for (int i = 0; i < 4; ++i)
             {
@@ -243,24 +243,24 @@ public class I_block : ATetrimino
         }
     }
 
-    public override void set_form(int form, int face)
+    public override void set_form(int face)
     {
         switch (face)
         {
             case Constants.FRONT:
-                this.set_front(form);
+                this.set_front();
                 break;
 
             case Constants.LEFT:
-                this.set_left(form);
+                this.set_left();
                 break;
 
             case Constants.BACK:
-                this.set_back(form);
+                this.set_back();
                 break;
 
             case Constants.RIGHT:
-                this.set_right(form);
+                this.set_right();
                 break;
 
             default:

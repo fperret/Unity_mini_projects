@@ -75,6 +75,8 @@ public class Game_manager : MonoBehaviour
             this.current_face = Constants.FRONT;
         else
             this.current_face++;
+        // Passer directement par un attribut ?
+        Grid_manager.instance.current.rotate_change_face(this.current_face);
     }
 
     public void update_score(int add)

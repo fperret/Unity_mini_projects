@@ -18,7 +18,7 @@ abstract public class ATetrimino : MonoBehaviour
     private bool is_controlled;
     private float time_call;
 
-    public abstract void set_form(int form, int face);
+    public abstract void set_form(int face);
 
     private void build_form()
     {
@@ -42,21 +42,8 @@ abstract public class ATetrimino : MonoBehaviour
         }
     }
 
-    public void rotate()
+    public void replace_tetrimino()
     {
-        this.current_form += 1;
-        if (this.current_form == 4)
-            this.current_form = 0;
-        this.set_form(this.current_form, Game_manager.instance.current_face);
-        // Should move piece accordingly /!\ IMPORTANT
-        if (!Grid_manager.instance.is_position_possible())
-        {
-            this.current_form -= 1;
-            if (this.current_form == -1)
-                this.current_form = 3;
-            this.set_form(this.current_form, Game_manager.instance.current_face);
-        }
-        this.build_form();
         switch (Game_manager.instance.current_face)
         {
             case Constants.FRONT:
@@ -111,6 +98,109 @@ abstract public class ATetrimino : MonoBehaviour
         }
     }
 
+    public bool rotate_change_face(int face)
+    {
+        this.set_form(face);
+        if (!Grid_manager.instance.is_position_possible())
+        {
+            int save = this.current_form;
+
+            while (true)
+            {
+                if (this.rotate())
+                    return (true);
+                else
+                {
+                    if (this.current_form == 3)
+                        this.current_form = 0;
+                    else
+                        this.current_form++;
+                    if (this.current_form == save)
+                        return (false);
+                }
+            }
+        }
+        else
+        {
+            this.build_form();
+            this.replace_tetrimino();
+            return (true);
+        }
+    }
+
+    public bool rotate()
+    {
+        bool state = true;
+
+        this.current_form += 1;
+        if (this.current_form == 4)
+            this.current_form = 0;
+        this.set_form(Game_manager.instance.current_face);
+        // Should move piece accordingly /!\ IMPORTANT
+        if (!Grid_manager.instance.is_position_possible())
+        {
+            this.current_form -= 1;
+            if (this.current_form == -1)
+                this.current_form = 3;
+            this.set_form(Game_manager.instance.current_face);
+        }
+        this.build_form();
+        this.replace_tetrimino();
+        return (state);
+/*        switch (Game_manager.instance.current_face)
+        {
+            case Constants.FRONT:
+                if (this.children_blocks[this.index_leftmost].transform.position.x <= 0)
+                {
+                    this.transform.position += new Vector3(-this.children_blocks[this.index_leftmost].transform.position.x, 0, 0);
+                }
+                else if (this.children_blocks[this.index_rightmost].transform.position.x >= 12)
+                {
+                    this.transform.position += new Vector3(12 - this.children_blocks[this.index_rightmost].transform.position.x, 0, 0);
+                }
+                break;
+
+            case Constants.LEFT:
+                if (this.children_blocks[this.index_leftmost].transform.position.z >= 12)
+                {
+                    this.transform.position += new Vector3(0, 0, 12 - this.children_blocks[this.index_leftmost].transform.position.z);
+                }
+                else if (this.children_blocks[this.index_rightmost].transform.position.z <= 0)
+                {
+                    this.transform.position += new Vector3(0, 0, -this.children_blocks[this.index_rightmost].transform.position.z);
+                }
+                break;
+
+            case Constants.BACK:
+                if (this.children_blocks[this.index_leftmost].transform.position.x >= 12)
+                {
+                    this.transform.position += new Vector3(12 - this.children_blocks[this.index_leftmost].transform.position.x, 0, 0);
+                }
+                else if (this.children_blocks[this.index_rightmost].transform.position.x <= 0)
+                {
+                    this.transform.position += new Vector3(-this.children_blocks[this.index_rightmost].transform.position.x, 0, 0);
+                }
+                break;
+
+            case Constants.RIGHT:
+                if (this.children_blocks[this.index_leftmost].transform.position.z <= 0)
+                {
+                    this.transform.position += new Vector3(0, 0, -this.children_blocks[this.index_leftmost].transform.position.z);
+                }
+                else if (this.children_blocks[this.index_rightmost].transform.position.z >= 12)
+                {
+                    this.transform.position += new Vector3(0, 0, 12 - this.children_blocks[this.index_rightmost].transform.position.z);
+                }
+                break;
+
+
+        }
+        if (this.children_blocks[0].transform.position.y <= 0)
+        {
+            this.transform.position = new Vector3(this.transform.position.x, 0, this.transform.position.z);
+        }*/
+    }
+
     public void fall()
     {
         if (Grid_manager.instance.can_move_down())
@@ -136,7 +226,8 @@ abstract public class ATetrimino : MonoBehaviour
             speed = 0.1f;
         InvokeRepeating("fall", speed, speed);
         this.current_form = 0;
-        this.set_form(0, Game_manager.instance.current_face);
+        this.set_form(Game_manager.instance.current_face);
+        this.build_form();
         this.is_controlled = true;
         this.time_call = 0;
         Grid_manager.instance.current = this;

@@ -32,115 +32,96 @@ public class Grid_manager : MonoBehaviour {
     {
     }
 
+    private bool check_full_depth(int x, int y, int z)
+    {
+        switch (Game_manager.instance.current_face)
+        {
+            case Constants.FRONT:
+            case Constants.BACK:
+                for (int k = 0; k < this.grid.GetLength(2); k++)
+                {
+                    if (this.grid[y, x, k] != null)
+                        return (false);
+                }
+                break;
+
+            case Constants.LEFT:
+            case Constants.RIGHT:
+                for (int j = 0; j < this.grid.GetLength(1); j++)
+                {
+                    if (this.grid[y, j, z] != null)
+                        return (false);
+                }
+                break;
+
+        }
+        return (true);
+    }
+
     public bool can_move_down()
     {
         foreach (GameObject block in this.current.children_blocks)
         {
             int i = (int)block.transform.position.y;
-            if (i <= 0 || (i <= 24 && this.grid[i - 1,
+            if (i <= 0 || (i <= 24 && !this.check_full_depth(
                                                 (int)block.transform.position.x,
-                                                (int)block.transform.position.z] != null))
+                                                (i - 1),
+                                                (int)block.transform.position.z)))
                 return (false);
         }
-/*        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
-        {
-            int i = (int)this.current.children_blocks[e].transform.position.y;
-            int j = (int)this.current.children_blocks[e].transform.position.x;
-            int k = (int)this.current.children_blocks[e].transform.position.z;
-            if (i <= 0 || i <= 24 && this.grid[i - 1, j, k] != null)
-                return (false);
-        }*/
         return (true);
     }
 
     public bool can_move_down(GameObject game_object)
     {
         Transform[] blocks = game_object.GetComponentsInChildren<Transform>();
-/*        foreach (Transform block in blocks)
-        {
-            int i = (int)block.position.y;
-            if (i <= 0 || (i <= 23 && this.grid[i - 1,
-                                               (int)block.position.x,
-                                               (int)block.position.z] != null))
-                return (false);
-        }*/
         for (int e = 1; e < blocks.GetLength(0); ++e)
         {
             int i = (int)blocks[e].position.y;
-            if (i <= 0 || (i <= 23 && this.grid[i - 1,
+            if (i <= 0 || (i <= 23 && !this.check_full_depth(
                                                 (int)blocks[e].position.x,
-                                                (int)blocks[e].position.z] != null))
+                                                (i - 1),
+                                                (int)blocks[e].position.z)))
                 return (false);
+        }
+        return (true);
+    }
+
+    private bool sub_free_check(int x_offset, int z_offset)
+    {
+        foreach (GameObject block in this.current.children_blocks)
+        {
+            int i = (int)block.transform.position.y;
+            if (i <= 23)
+            {
+                if (!this.check_full_depth(
+                                    (int)block.transform.position.x + x_offset,
+                                    i,
+                                    (int)block.transform.position.z + z_offset))
+                    return (false);
+            }
         }
         return (true);
     }
 
     public bool is_right_free()
     {
-        foreach (GameObject block in this.current.children_blocks)
-        {
-            int i = (int)block.transform.position.y;
-            if (i <= 23 && this.grid[i,
-                                    (int)block.transform.position.x + 1,
-                                    (int)block.transform.position.z] != null)
-                return (false);
-        }
-/*        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
-        {
-            int i = (int)this.current.children_blocks[e].transform.position.y;
-            if (i <= 23 && this.grid[(int)this.current.children_blocks[e].transform.position.y,
-                                     (int)this.current.children_blocks[e].transform.position.x + 1,
-                                     (int)this.current.children_blocks[e].transform.position.z] != null)
-                return (false);
-        }*/
-        return (true);
+        return (sub_free_check(1, 0));
     }
 
     public bool is_left_free()
     {
-        foreach (GameObject block in this.current.children_blocks)
-        {
-            int i = (int)block.transform.position.y;
-            if (i <= 23 && this.grid[i,
-                                    (int)block.transform.position.x - 1,
-                                    (int)block.transform.position.z] != null)
-                return (false);
-        }
-/*        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
-        {
-            int i = (int)this.current.children_blocks[e].transform.position.y;
-            if (i <= 23 && this.grid[i,
-                                    (int)this.current.children_blocks[e].transform.position.x - 1,
-                                    (int)this.current.children_blocks[e].transform.position.z] != null)
-                return (false);
-        }*/
-        return (true);
+        return (sub_free_check(-1, 0));
     }
 
     public bool is_front_free()
     {
-        foreach (GameObject block in this.current.children_blocks)
-        {
-            int i = (int)block.transform.position.y;
-            if (i <= 23 && this.grid[i,
-                                    (int)block.transform.position.x,
-                                    (int)block.transform.position.z - 1] != null)
-                return (false);
-        }
-        return (true);
+        return (sub_free_check(0, -1));
     }
 
     public bool is_back_free()
     {
-        foreach (GameObject block in this.current.children_blocks)
-        {
-            int i = (int)block.transform.position.y;
-            if (i <= 23 && this.grid[i,
-                                    (int)block.transform.position.x,
-                                    (int)block.transform.position.z + 1] != null)
-                return (false);
-        }
-        return (true);
+        return(sub_free_check(0, 1));
     }
 
     public bool is_position_possible()
@@ -418,16 +399,6 @@ public class Grid_manager : MonoBehaviour {
             }
             this.grid[check_i, (int)block.transform.position.x, (int)block.transform.position.z] = block;
         }
-/*        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
-        {
-            int check_i = (int)this.current.children_blocks[e].transform.position.y;
-            if (check_i > 23)
-            {
-                Game_manager.instance.game_over();
-                return;
-            }
-            this.grid[check_i, (int)this.current.children_blocks[e].transform.position.x, (int)this.current.children_blocks[e].transform.position.z] = this.current.children_blocks[e];
-        }*/
 
         // Check row
         foreach (GameObject block in this.current.children_blocks)
@@ -441,17 +412,6 @@ public class Grid_manager : MonoBehaviour {
                 Game_manager.instance.update_score(50);
             }
         }
-/*        for (int e = 0; e < this.current.children_blocks.GetLength(0); ++e)
-        {
-            int row = (int)this.current.children_blocks[e].transform.position.y;
-            if (this.check_row_full(row))
-            {
-                destroy_row(row);
-                move_blocks_down(row);
-                Game_manager.instance.update_lines(1);
-                Game_manager.instance.update_score(50);
-            }
-        }*/
         if (instant_drop)
             Game_manager.instance.update_score(10);
         else

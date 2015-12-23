@@ -10,7 +10,7 @@ public class O_block : ATetrimino
         base.Start();
     }
 
-    public void set_front(int form)
+    public void set_front()
     {
         this.blocks[0, 0, 0] = 1;
         this.blocks[1, 0, 0] = 1;
@@ -20,7 +20,7 @@ public class O_block : ATetrimino
         this.index_rightmost = 1;
     }
 
-    public void set_left(int form)
+    public void set_left()
     {
         this.blocks[0, 0, 0] = 1;
         this.blocks[1, 0, 0] = 1;
@@ -30,7 +30,7 @@ public class O_block : ATetrimino
         this.index_rightmost = 0;
     }
 
-    public void set_back(int form)
+    public void set_back()
     {
         this.blocks[0, 0, 0] = 1;
         this.blocks[1, 0, 0] = 1;
@@ -40,7 +40,7 @@ public class O_block : ATetrimino
         this.index_rightmost = 0;
     }
 
-    public void set_right(int form)
+    public void set_right()
     {
         this.blocks[0, 0, 0] = 1;
         this.blocks[1, 0, 0] = 1;
@@ -52,7 +52,7 @@ public class O_block : ATetrimino
 
 
 
-    public override void set_form(int form, int face)
+    public override void set_form(int face)
     {
         for (int i = 0; i < 2; ++i)
         {
@@ -68,19 +68,19 @@ public class O_block : ATetrimino
         switch (face)
         {
             case Constants.FRONT:
-                this.set_front(form);
+                this.set_front();
                 break;
 
             case Constants.LEFT:
-                this.set_left(form);
+                this.set_left();
                 break;
 
             case Constants.BACK:
-                this.set_back(form);
+                this.set_back();
                 break;
 
             case Constants.RIGHT:
-                this.set_right(form);
+                this.set_right();
                 break;
 
             default:
