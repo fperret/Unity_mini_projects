@@ -33,6 +33,7 @@ abstract public class ATetrimino : MonoBehaviour
                 {
                     if (blocks[i, j, k] == 1)
                     {
+                        Debug.Log(e.ToString());
                         this.children_blocks[e].transform.position = new Vector3(this.transform.position.x + j, this.transform.position.y + i, this.transform.position.z + k);
                         preview_blocks[e + 1].localPosition = this.children_blocks[e].transform.localPosition;
                         e++;
@@ -147,58 +148,6 @@ abstract public class ATetrimino : MonoBehaviour
         this.build_form();
         this.replace_tetrimino();
         return (state);
-/*        switch (Game_manager.instance.current_face)
-        {
-            case Constants.FRONT:
-                if (this.children_blocks[this.index_leftmost].transform.position.x <= 0)
-                {
-                    this.transform.position += new Vector3(-this.children_blocks[this.index_leftmost].transform.position.x, 0, 0);
-                }
-                else if (this.children_blocks[this.index_rightmost].transform.position.x >= 12)
-                {
-                    this.transform.position += new Vector3(12 - this.children_blocks[this.index_rightmost].transform.position.x, 0, 0);
-                }
-                break;
-
-            case Constants.LEFT:
-                if (this.children_blocks[this.index_leftmost].transform.position.z >= 12)
-                {
-                    this.transform.position += new Vector3(0, 0, 12 - this.children_blocks[this.index_leftmost].transform.position.z);
-                }
-                else if (this.children_blocks[this.index_rightmost].transform.position.z <= 0)
-                {
-                    this.transform.position += new Vector3(0, 0, -this.children_blocks[this.index_rightmost].transform.position.z);
-                }
-                break;
-
-            case Constants.BACK:
-                if (this.children_blocks[this.index_leftmost].transform.position.x >= 12)
-                {
-                    this.transform.position += new Vector3(12 - this.children_blocks[this.index_leftmost].transform.position.x, 0, 0);
-                }
-                else if (this.children_blocks[this.index_rightmost].transform.position.x <= 0)
-                {
-                    this.transform.position += new Vector3(-this.children_blocks[this.index_rightmost].transform.position.x, 0, 0);
-                }
-                break;
-
-            case Constants.RIGHT:
-                if (this.children_blocks[this.index_leftmost].transform.position.z <= 0)
-                {
-                    this.transform.position += new Vector3(0, 0, -this.children_blocks[this.index_leftmost].transform.position.z);
-                }
-                else if (this.children_blocks[this.index_rightmost].transform.position.z >= 12)
-                {
-                    this.transform.position += new Vector3(0, 0, 12 - this.children_blocks[this.index_rightmost].transform.position.z);
-                }
-                break;
-
-
-        }
-        if (this.children_blocks[0].transform.position.y <= 0)
-        {
-            this.transform.position = new Vector3(this.transform.position.x, 0, this.transform.position.z);
-        }*/
     }
 
     public void fall()
@@ -227,7 +176,6 @@ abstract public class ATetrimino : MonoBehaviour
         InvokeRepeating("fall", speed, speed);
         this.current_form = 0;
         this.set_form(Game_manager.instance.current_face);
-        this.build_form();
         this.is_controlled = true;
         this.time_call = 0;
         Grid_manager.instance.current = this;
