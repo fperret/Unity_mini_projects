@@ -31,17 +31,17 @@ public class Game_manager : MonoBehaviour
         {
             incoming_id[k] = this.shuffle_bag.Next();
         }
-    }
-
-	// Use this for initialization
-	void Start ()
-    {
         this.lines = 0;
         this.score = 0;
         this.game_pause = false;
         this.menu_pause = false;
         this.storage = -1;
-        this.current_face = Constants.FRONT;
+        this.current_face = -1;
+    }
+
+	// Use this for initialization
+	void Start ()
+    {
 	}
 
     // Update is called once per frame
@@ -95,7 +95,24 @@ public class Game_manager : MonoBehaviour
 
     public void give_new_tetrimino()
     {
-        Instantiate(this.tetriminos[incoming_id[0]], new Vector3(5, 23, 0), Quaternion.identity);
+        Vector3 spawn_position = new Vector3(0, 23, 0);
+
+        if (this.current_face == Constants.RIGHT)
+            this.current_face = Constants.FRONT;
+        else
+            this.current_face++;
+        Grid_manager.instance.check_whole_face();
+        if (this.current_face == Constants.FRONT || this.current_face == Constants.BACK)
+        {
+            spawn_position.x = 5;
+            spawn_position.z = Random.Range(0, 13);
+        }
+        else
+        {
+            spawn_position.x = Random.Range(0, 13);
+            spawn_position.z = 5;
+        }
+        Instantiate(this.tetriminos[incoming_id[0]], spawn_position, Quaternion.identity);
         for (int k = 0; k < 3; ++k)
         {
             incoming_id[k] = incoming_id[k + 1];

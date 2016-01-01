@@ -387,6 +387,20 @@ public class Grid_manager : MonoBehaviour {
         }
     }
 
+    public void check_whole_face()
+    {
+        for (int i = 0; i < grid.GetLength(0); ++i)
+        {
+            if (check_row_full(i))
+            {
+                destroy_row(i);
+                move_blocks_down(i);
+                Game_manager.instance.update_lines(1);
+                Game_manager.instance.update_score(50);
+            }
+        }
+    }
+
     public void update_new_drop(bool instant_drop)
     {
         foreach (GameObject block in this.current.children_blocks)

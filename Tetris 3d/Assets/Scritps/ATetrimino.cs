@@ -20,6 +20,26 @@ abstract public class ATetrimino : MonoBehaviour
 
     public abstract void set_form(int face);
 
+    public void Awake()
+    {
+        this.from_storage = false;
+    }
+
+    public void Start()
+    {
+        float speed = 1f - ((float)Game_manager.instance.level / 10);
+        if (speed < 0.1f)
+            speed = 0.1f;
+        InvokeRepeating("fall", speed, speed);
+        this.set_form(Game_manager.instance.current_face);
+        this.is_controlled = true;
+        this.current_form = 0;
+        Grid_manager.instance.current = this;
+        this.time_call = 0;
+        this.preview = (GameObject) Instantiate(this.preview, this.transform.position, Quaternion.identity);
+        this.build_form();
+    }
+
     private void build_form()
     {
         // Modification d'un axe qui ne devrait pas etre fait a ce moment la
@@ -33,7 +53,6 @@ abstract public class ATetrimino : MonoBehaviour
                 {
                     if (blocks[i, j, k] == 1)
                     {
-                        Debug.Log(e.ToString());
                         this.children_blocks[e].transform.position = new Vector3(this.transform.position.x + j, this.transform.position.y + i, this.transform.position.z + k);
                         preview_blocks[e + 1].localPosition = this.children_blocks[e].transform.localPosition;
                         e++;
@@ -163,25 +182,6 @@ abstract public class ATetrimino : MonoBehaviour
         }
     }
 
-    public void Awake()
-    {
-        this.from_storage = false;
-    }
-
-    public void Start()
-    {
-        float speed = 1f - ((float)Game_manager.instance.level / 10);
-        if (speed < 0.1f)
-            speed = 0.1f;
-        InvokeRepeating("fall", speed, speed);
-        this.current_form = 0;
-        this.set_form(Game_manager.instance.current_face);
-        this.is_controlled = true;
-        this.time_call = 0;
-        Grid_manager.instance.current = this;
-        this.preview = (GameObject) Instantiate(this.preview, this.transform.position, Quaternion.identity);
-    }
-
     private void place_preview()
     {
         this.preview.transform.position = this.transform.position;
@@ -258,7 +258,7 @@ abstract public class ATetrimino : MonoBehaviour
                 move_right();
             else if (Input.GetKeyDown(Inputs_manager.instance.move_left_key))
                 move_left();
-            else if (this.time_call >= 0.08f)
+            else if (this.time_call >= 0.18f)
             {
                 if (Input.GetKey(Inputs_manager.instance.move_right_key))
                     move_right();

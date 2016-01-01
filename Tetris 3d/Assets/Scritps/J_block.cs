@@ -302,9 +302,9 @@ public class J_block : ATetrimino
                         {
                             if (i == 2)
                                 this.blocks[i, j, k] = 0;
-                            else if (i == 0 && j == 2)
+                            else if (i == 0 && j == 0)
                                 this.blocks[i, j, k] = 1;
-                            else if (k == 0 && j == 2)
+                            else if (k == 0 && j == 0)
                                 this.blocks[i, j, k] = 1;
                             else
                                 this.blocks[i, j, k] = 0;
@@ -322,9 +322,9 @@ public class J_block : ATetrimino
                     {
                         for (int k = 0; k < 3; ++k)
                         {
-                            if (k == 1 && j == 2)
+                            if (k == 1 && j == 0)
                                 this.blocks[i, j, k] = 1;
-                            else if (i == 2 && k == 2 && j == 2)
+                            else if (i == 2 && k == 2 && j == 0)
                                 this.blocks[i, j, k] = 1;
                             else
                                 this.blocks[i, j, k] = 0;
@@ -344,9 +344,9 @@ public class J_block : ATetrimino
                         {
                             if (i == 2)
                                 this.blocks[i, j, k] = 0;
-                            else if (i == 1 && j == 2)
+                            else if (i == 1 && j == 0)
                                 this.blocks[i, j, k] = 1;
-                            else if (k == 2 && j == 2)
+                            else if (k == 2 && j == 0)
                                 this.blocks[i, j, k] = 1;
                             else
                                 this.blocks[i, j, k] = 0;
@@ -364,9 +364,9 @@ public class J_block : ATetrimino
                     {
                         for (int k = 0; k < 3; ++k)
                         {
-                            if (k == 1 && j == 2)
+                            if (k == 1 && j == 0)
                                 this.blocks[i, j, k] = 1;
-                            else if (i == 0 && k == 0 && j == 2)
+                            else if (i == 0 && k == 0 && j == 0)
                                 this.blocks[i, j, k] = 1;
                             else
                                 this.blocks[i, j, k] = 0;
