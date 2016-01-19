@@ -5,6 +5,7 @@ public class Rotate : MonoBehaviour {
     public Cube.e_face face;
     public Transform target;
 	public float speed;
+	public bool instant;
 
     public float last_call;
 	private float goal;
@@ -14,7 +15,6 @@ public class Rotate : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         last_call = 0.0f;
-	
 	}
 
     public void rotate()
@@ -22,26 +22,44 @@ public class Rotate : MonoBehaviour {
         switch (face)
         {
             case Cube.e_face.UP:
+			if (instant)
+			transform.RotateAround(target.position, target.transform.up, 90f);
+			else
 			transform.RotateAround(target.position, target.transform.up, 90f * Time.deltaTime * speed);
                 break;
 
             case Cube.e_face.DOWN:
+			if (instant)
+			transform.RotateAround(target.position, target.transform.up, -90f);
+			else
 			transform.RotateAround(target.position, target.transform.up, -90f * Time.deltaTime * speed);
                 break;
 
             case Cube.e_face.FRONT:
+			if (instant)
+			transform.RotateAround(target.position, target.transform.right, 90f);
+			else
 			transform.RotateAround(target.position, target.transform.right, 90f * Time.deltaTime * speed);
                 break;
 
             case Cube.e_face.RIGHT:
+			if (instant)
+			transform.RotateAround(target.position, target.transform.forward, 90f);
+			else
 			transform.RotateAround(target.position, target.transform.forward, 90f * Time.deltaTime * speed);
                 break;
 
             case Cube.e_face.BACK:
+			if (instant)
+			transform.RotateAround(target.position, target.transform.right, -90f);
+			else
 			transform.RotateAround(target.position, target.transform.right, -90f * Time.deltaTime * speed);
                 break;
 
             case Cube.e_face.LEFT:
+			if (instant)
+			transform.RotateAround(target.position, target.transform.forward, -90f);
+			else
 			transform.RotateAround(target.position, target.transform.forward, -90f * Time.deltaTime * speed);
                 break;
 
@@ -70,16 +88,17 @@ public class Rotate : MonoBehaviour {
 		case Cube.e_face.LEFT:
 			break;
 		}
+		if (instant)
+			rotate ();
 	}
 
     // Update is called once per frame
     void Update() {
-		if (trigger)
+		if (trigger && (!instant))
 		{
 			rotate();
 			last_call += Time.deltaTime;
 		}
-		Debug.Log (last_call);
 		if (last_call >= (time_limit)) {
 			trigger = false;
 			reverse = false;
