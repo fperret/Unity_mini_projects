@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text;
+using System.IO;
+
 
 public class Cube : MonoBehaviour {
     public enum e_face
@@ -245,38 +248,108 @@ public class Cube : MonoBehaviour {
     {
         GameObject[] tmp_face = new GameObject[8];
 
-        for (int i = ((reverse) ? 3 : 1) ; i != 0; i--)
-        {
-            copy_face(faces[(int)face], tmp_face);
-            switch (face)
-            {
-                case e_face.UP:
-                    this.rotate_up(tmp_face);
-                    break;
+		for (int i = 0; i < rotates.Length; ++i) {
+			if (rotates[i].last_call != 0.0f)
+				return ;
+		}
+			for (int i = ((reverse) ? 3 : 1); i != 0; i--) {
+				copy_face (faces [(int)face], tmp_face);
+				switch (face) {
+				case e_face.UP:
+					this.rotate_up (tmp_face);
+					break;
 
-                case e_face.DOWN:
-                    this.rotate_down(tmp_face);
-                    break;
+				case e_face.DOWN:
+					this.rotate_down (tmp_face);
+					break;
 
-                case e_face.FRONT:
-                    this.rotate_front(tmp_face);
-                    break;
+				case e_face.FRONT:
+					this.rotate_front (tmp_face);
+					break;
 
-                case e_face.RIGHT:
-                    this.rotate_right(tmp_face);
-                    break;
+				case e_face.RIGHT:
+					this.rotate_right (tmp_face);
+					break;
 
-                case e_face.BACK:
-                    this.rotate_back(tmp_face);
-                    break;
+				case e_face.BACK:
+					this.rotate_back (tmp_face);
+					break;
 
-                case e_face.LEFT:
-                    this.rotate_left(tmp_face);
-                    break;
-            }
-            same_face_rotation(faces[(int)face], tmp_face);
-            faces[(int)face].apply_parent();
-            rotates[(int)face].rotate();
-        }
+				case e_face.LEFT:
+					this.rotate_left (tmp_face);
+					break;
+				}
+				same_face_rotation (faces [(int)face], tmp_face);
+				faces [(int)face].apply_parent ();
+				rotates [(int)face].set_goal (reverse);
+			}
     }
+
+	private void load_cmd()
+	{
+		try
+		{
+			string			line;
+			StreamReader	reader = new StreamReader("/nfs/zfs-student-3/users/fperret/documents/rubiks/solution.txt", Encoding.Default);
+
+			using (reader)
+			{
+				line = reader.ReadLine ();
+				// Read first line
+				if (line != null)
+				{
+					string[] cmd = line.Split (' ');
+					bool reverse;
+					int i = 0;
+					while (i < cmd.Length)
+					{
+						if (cmd[i].Length >= 1)
+						{
+						reverse = (cmd[i].Length > 1);
+						switch (cmd[i][0])
+						{
+							case 'U':
+								rotate_dispatch (e_face.UP, reverse);
+								break;
+							case 'D':
+								rotate_dispatch (e_face.DOWN, reverse);
+								break;
+							case 'F':
+								rotate_dispatch (e_face.FRONT, reverse);
+								break;
+							case 'R':
+								rotate_dispatch (e_face.RIGHT, reverse);
+								break;
+							case 'B':
+								rotate_dispatch (e_face.BACK, reverse);
+								break;
+							case 'L':
+								rotate_dispatch (e_face.LEFT, reverse);
+								break;
+							default:
+								break;
+						}
+						}
+						bool can_move = true;
+							for (int j = 0; j < rotates.Length; ++j) {
+							if (rotates[j].last_call != 0.0f)
+								can_move = false ;
+						}
+							if (can_move)
+								i++;
+					}
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			Debug.Log ("error file");
+			Debug.Log (e.ToString());
+		}
+	}
+
+	void Start()
+	{
+		load_cmd ();
+	}
 }
