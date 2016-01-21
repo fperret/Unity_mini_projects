@@ -226,6 +226,8 @@ public class Cube : MonoBehaviour {
 			shuffled = true;
 		} else if (Input.GetKeyDown (KeyCode.Space) && shuffled && !trigger_shuffle && !solved) {
 			this.trigger_solve = true;
+		} else if (Input.GetKeyDown (KeyCode.Escape) {
+			Application.Quit();
 		}
 		if (trigger_shuffle) {
 			timer += Time.deltaTime;
