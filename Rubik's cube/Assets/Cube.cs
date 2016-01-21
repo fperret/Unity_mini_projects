@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Text;
 using System.IO;
+using System;
 
 
 public class Cube : MonoBehaviour {
@@ -35,6 +36,7 @@ public class Cube : MonoBehaviour {
 	private bool 	trigger_solve;
 	private bool	shuffled;
 	private bool	solved;
+	private bool	recording;
 
     void Awake()
     {
@@ -191,23 +193,17 @@ public class Cube : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
+        if (Input.GetKeyDown(KeyCode.W))
 			this.rotate_dispatch(e_face.UP, false, false);
-        }
-
         else if (Input.GetKeyDown(KeyCode.S))
-        {
 			this.rotate_dispatch(e_face.DOWN, false, false);
-        }
-
-        if (Input.GetKeyDown (KeyCode.A)) {
+        if (Input.GetKeyDown (KeyCode.Q)) {
 			this.rotate_dispatch (e_face.FRONT, false, false);
 		} else if (Input.GetKeyDown (KeyCode.D)) {
 			this.rotate_dispatch (e_face.RIGHT, false, false);
 		} else if (Input.GetKeyDown (KeyCode.E)) {
 			this.rotate_dispatch (e_face.BACK, false, false);
-		} else if (Input.GetKeyDown (KeyCode.Q)) {
+		} else if (Input.GetKeyDown (KeyCode.A)) {
 			this.rotate_dispatch (e_face.LEFT, false, false);
 		} else if (Input.GetKeyDown (KeyCode.I)) {
 			this.rotate_dispatch (e_face.UP, true, false);
@@ -226,8 +222,10 @@ public class Cube : MonoBehaviour {
 			shuffled = true;
 		} else if (Input.GetKeyDown (KeyCode.Space) && shuffled && !trigger_shuffle && !solved) {
 			this.trigger_solve = true;
-		} else if (Input.GetKeyDown (KeyCode.Escape) {
-			Application.Quit();
+		} else if (Input.GetKeyDown (KeyCode.Escape)) {
+			Application.Quit ();
+		} else if (Input.GetKeyDown (KeyCode.R)) {
+			recording = !recording;
 		}
 		if (trigger_shuffle) {
 			timer += Time.deltaTime;
@@ -265,37 +263,53 @@ public class Cube : MonoBehaviour {
 			repeat = 2;
 		else if (reverse)
 			repeat = 3;
+		using (StreamWriter sw = new StreamWriter("unity.txt", true))
+		       {
 			for (int i = repeat; i != 0; i--) {
 				copy_face (faces [(int)face], tmp_face);
+				
 				switch (face) {
-				case e_face.UP:
-					this.rotate_up (tmp_face);
-					break;
+					case e_face.UP:
+						if (recording)
+							sw.Write(" U");
+						this.rotate_up (tmp_face);
+						break;
 
-				case e_face.DOWN:
-					this.rotate_down (tmp_face);
-					break;
+					case e_face.DOWN:
+						if (recording)
+							sw.Write (" D");
+						this.rotate_down (tmp_face);
+						break;
 
-				case e_face.FRONT:
-					this.rotate_front (tmp_face);
-					break;
+					case e_face.FRONT:
+						if (recording)
+							sw.Write (" F");
+						this.rotate_front (tmp_face);
+						break;
 
-				case e_face.RIGHT:
-					this.rotate_right (tmp_face);
-					break;
+					case e_face.RIGHT:
+						if (recording)
+							sw.Write (" R");
+						this.rotate_right (tmp_face);
+						break;
 
-				case e_face.BACK:
-					this.rotate_back (tmp_face);
-					break;
+					case e_face.BACK:
+						if (recording)
+							sw.Write (" B");
+						this.rotate_back (tmp_face);
+						break;
 
-				case e_face.LEFT:
-					this.rotate_left (tmp_face);
-					break;
+					case e_face.LEFT:
+					if (recording)
+							sw.Write (" L");
+						this.rotate_left (tmp_face);
+						break;
 				}
 				same_face_rotation (faces [(int)face], tmp_face);
 				faces [(int)face].apply_parent ();
 				rotates [(int)face].rotate ();
 			}
+		}
     }
 
 	private void process_cmd(string []cmds)
@@ -343,7 +357,7 @@ public class Cube : MonoBehaviour {
 		try
 		{
 			string			line;
-			StreamReader	reader = new StreamReader("/nfs/zfs-student-3/users/fperret/documents/rubiks/solution.txt", Encoding.Default);
+			StreamReader	reader = new StreamReader("solution.txt", Encoding.Default);
 
 			using (reader)
 			{
@@ -359,6 +373,7 @@ public class Cube : MonoBehaviour {
 				{
 					this.cmds_solve = line.Split (' ');
 				}
+				reader.Close();
 			}
 		}
 		catch (IOException e)
@@ -374,6 +389,7 @@ public class Cube : MonoBehaviour {
 		trigger_solve = false;
 		shuffled = false;
 		solved = false;
+		recording = false;
 		load_cmd ();
 		timer = 0.0f;
 		index = 0;
