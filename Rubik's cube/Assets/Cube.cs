@@ -28,8 +28,14 @@ public class Cube : MonoBehaviour {
     public Rotate[] rotates = new Rotate[6];
     private Face[] save_faces = new Face[6];
 	private float timer;
-	private string[] cmds;
+	private string[] cmds_input;
+	private string[] cmds_solve;
 	private int index;
+	private bool	trigger_shuffle;
+	private bool 	trigger_solve;
+	private bool	shuffled;
+	private bool	solved;
+
     void Awake()
     {
         for (int i = 0; i < 6; ++i)
@@ -187,54 +193,77 @@ public class Cube : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            this.rotate_dispatch(e_face.UP, false);
+			this.rotate_dispatch(e_face.UP, false, false);
         }
 
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            this.rotate_dispatch(e_face.DOWN, false);
+			this.rotate_dispatch(e_face.DOWN, false, false);
         }
 
         if (Input.GetKeyDown (KeyCode.A)) {
-			this.rotate_dispatch (e_face.FRONT, false);
+			this.rotate_dispatch (e_face.FRONT, false, false);
 		} else if (Input.GetKeyDown (KeyCode.D)) {
-			this.rotate_dispatch (e_face.RIGHT, false);
+			this.rotate_dispatch (e_face.RIGHT, false, false);
 		} else if (Input.GetKeyDown (KeyCode.E)) {
-			this.rotate_dispatch (e_face.BACK, false);
+			this.rotate_dispatch (e_face.BACK, false, false);
 		} else if (Input.GetKeyDown (KeyCode.Q)) {
-			this.rotate_dispatch (e_face.LEFT, false);
+			this.rotate_dispatch (e_face.LEFT, false, false);
 		} else if (Input.GetKeyDown (KeyCode.I)) {
-			this.rotate_dispatch (e_face.UP, true);
+			this.rotate_dispatch (e_face.UP, true, false);
 		} else if (Input.GetKeyDown (KeyCode.K)) {
-			this.rotate_dispatch (e_face.DOWN, true);
+			this.rotate_dispatch (e_face.DOWN, true, false);
 		} else if (Input.GetKeyDown (KeyCode.U)) {
-			this.rotate_dispatch (e_face.FRONT, true);
+			this.rotate_dispatch (e_face.FRONT, true, false);
 		} else if (Input.GetKeyDown (KeyCode.O)) {
-			this.rotate_dispatch (e_face.BACK, true);
+			this.rotate_dispatch (e_face.BACK, true, false);
 		} else if (Input.GetKeyDown (KeyCode.L)) {
-			this.rotate_dispatch (e_face.RIGHT, true);
+			this.rotate_dispatch (e_face.RIGHT, true, false);
 		} else if (Input.GetKeyDown (KeyCode.J)) {
-			this.rotate_dispatch (e_face.LEFT, true);
+			this.rotate_dispatch (e_face.LEFT, true, false);
+		} else if (Input.GetKeyDown (KeyCode.Space) && !shuffled) {
+			this.trigger_shuffle = true;
+			shuffled = true;
+		} else if (Input.GetKeyDown (KeyCode.Space) && shuffled && !trigger_shuffle && !solved) {
+			this.trigger_solve = true;
 		}
-		timer += Time.deltaTime;
-		if (timer > 1.0f) {
-			Debug.Log (index);
-			process_cmd ();
-			if (index < (cmds.Length - 1))
-				index++;
-			timer = 0.0f;
+		if (trigger_shuffle) {
+			timer += Time.deltaTime;
+			if (timer > 0.2f) {
+				process_cmd (cmds_input);
+				if (index < (cmds_input.Length - 1))
+					index++;
+				else {
+					trigger_shuffle = false;
+					index = 0;
+				}
+				timer = 0.0f;
+			}
+		} else if (trigger_solve) {
+			timer += Time.deltaTime;
+			if (timer > 0.2f) {
+				process_cmd (cmds_solve);
+				if (index < (cmds_solve.Length - 1))
+					index++;
+				else {
+					solved = true;
+					trigger_solve = false;
+				}
+				timer = 0.0f;
+			}
 		}
     }
 
-    private void rotate_dispatch(e_face face, bool reverse)
+    private void rotate_dispatch(e_face face, bool reverse, bool double_move)
     {
         GameObject[] tmp_face = new GameObject[8];
 
-		for (int i = 0; i < rotates.Length; ++i) {
-			if (rotates[i].last_call != 0.0f)
-				return ;
-		}
-			for (int i = ((reverse) ? 3 : 1); i != 0; i--) {
+		int repeat = 1;
+		if (double_move)
+			repeat = 2;
+		else if (reverse)
+			repeat = 3;
+			for (int i = repeat; i != 0; i--) {
 				copy_face (faces [(int)face], tmp_face);
 				switch (face) {
 				case e_face.UP:
@@ -263,34 +292,43 @@ public class Cube : MonoBehaviour {
 				}
 				same_face_rotation (faces [(int)face], tmp_face);
 				faces [(int)face].apply_parent ();
-				rotates [(int)face].set_goal (reverse);
+				rotates [(int)face].rotate ();
 			}
     }
 
-	private void process_cmd()
+	private void process_cmd(string []cmds)
 	{
 		if (cmds[index].Length >= 1)
 		{
-			bool reverse = (cmds[index].Length > 1);
+			bool reverse = false;
+			bool double_move = false;
+			if (cmds[index].Length > 1)
+			{
+				if (cmds[index][1] == '\'')
+					reverse = true;
+				else if (cmds[index][1] == '2')
+					double_move = true;
+
+			}
 			switch (cmds[index][0])
 			{
 			case 'U':
-				rotate_dispatch (e_face.UP, reverse);
+				rotate_dispatch (e_face.UP, reverse, double_move);
 				break;
 			case 'D':
-				rotate_dispatch (e_face.DOWN, reverse);
+				rotate_dispatch (e_face.DOWN, reverse, double_move);
 				break;
 			case 'F':
-				rotate_dispatch (e_face.FRONT, reverse);
+				rotate_dispatch (e_face.FRONT, reverse, double_move);
 				break;
 			case 'R':
-				rotate_dispatch (e_face.RIGHT, reverse);
+				rotate_dispatch (e_face.RIGHT, reverse, double_move);
 				break;
 			case 'B':
-				rotate_dispatch (e_face.BACK, reverse);
+				rotate_dispatch (e_face.BACK, reverse, double_move);
 				break;
 			case 'L':
-				rotate_dispatch (e_face.LEFT, reverse);
+				rotate_dispatch (e_face.LEFT, reverse, double_move);
 				break;
 			default:
 				break;
@@ -311,7 +349,13 @@ public class Cube : MonoBehaviour {
 				// Read first line
 				if (line != null)
 				{
-					this.cmds = line.Split (' ');
+					this.cmds_input = line.Split (' ');
+				}
+				line = reader.ReadLine ();
+				// Read second line
+				if (line != null)
+				{
+					this.cmds_solve = line.Split (' ');
 				}
 			}
 		}
@@ -324,6 +368,10 @@ public class Cube : MonoBehaviour {
 
 	void Start()
 	{
+		trigger_shuffle = false;
+		trigger_solve = false;
+		shuffled = false;
+		solved = false;
 		load_cmd ();
 		timer = 0.0f;
 		index = 0;
