@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using System.IO;
 using System;
+using System.Diagnostics;
 
 
 public class Cube : MonoBehaviour {
@@ -225,6 +226,13 @@ public class Cube : MonoBehaviour {
 		} else if (Input.GetKeyDown (KeyCode.Escape)) {
 			Application.Quit ();
 		} else if (Input.GetKeyDown (KeyCode.R)) {
+			if (!recording)
+			{
+				using (StreamWriter sw = new StreamWriter("unity.txt", false))
+				{
+					sw.Write ("");
+				}
+			}
 			recording = !recording;
 		}
 		if (trigger_shuffle) {
@@ -378,8 +386,8 @@ public class Cube : MonoBehaviour {
 		}
 		catch (IOException e)
 		{
-			Debug.Log ("error file");
-			Debug.Log (e.ToString());
+			UnityEngine.Debug.Log ("error file");
+			UnityEngine.Debug.Log (e.ToString());
 		}
 	}
 
