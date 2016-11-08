@@ -6,6 +6,7 @@ Aborted because I did not find a way to use this mechanism :
 * if usable at will, the player had nothing to gain by using it
 * if imposed by the game it becomes complicated to predict the next move
 
+
     R - Rotate
     Q - Left move
     D - Right move
