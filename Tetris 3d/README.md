@@ -7,6 +7,7 @@ Aborted because I did not find a way to use this mechanism :
 * if imposed by the game it becomes complicated to predict the next move
 
 Controls
+
     R - Rotate
     Q - Left move
     D - Right move
