@@ -56,7 +56,7 @@ public class Game_manager : MonoBehaviour
         if (this.bricks == 0)
         {
             this.Win_text.SetActive(true);
-            this.Win_text.transform.position = new Vector3(Random.Range(300, 1700), Random.Range(0, 1000));
+            this.Win_text.transform.position = new Vector3(500, 450, 0);
             StartCoroutine("timed_exit");
         }
     }
